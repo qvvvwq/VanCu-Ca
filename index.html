@@ -337,17 +337,18 @@ function initLeafletMap(){
  if(!window.L){setTimeout(initLeafletMap,300);return}
  const el=document.getElementById("leafletMap"); if(!el)return;
  const m=L.map(el).setView([49.28,-123.12],10);
- // Two public basemaps: CARTO first, with OpenStreetMap available as a manual fallback.
- const carto=L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",{
-   maxZoom:20,
-   attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank">CARTO</a>'
- });
+ // Use OpenStreetMap as the default. CARTO's public endpoint now returns
+ // an API-key-required tile for some users, so do not use it as the default.
  const osm=L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{
    maxZoom:19,
    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
  });
- carto.addTo(m);
- L.control.layers({"簡潔地圖（預設）":carto,"OpenStreetMap":osm},null,{position:"topright"}).addTo(m);
+ const esri=L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",{
+   maxZoom:19,
+   attribution:'Tiles &copy; <a href="https://www.esri.com/" target="_blank">Esri</a> &mdash; Sources: Esri, Garmin, USGS, NOAA'
+ });
+ osm.addTo(m);
+ L.control.layers({"OpenStreetMap（預設）":osm,"Esri 備用地圖":esri},null,{position:"topright"}).addTo(m);
  const bounds=[];
  mapPoints.forEach(p=>{const marker=L.marker([p.lat,p.lon]).addTo(m);bounds.push([p.lat,p.lon]);marker.bindPopup(`<b>${p.n}</b><br><small>${p.q}</small><br><a href="${mapUrl(p.q,"transit","Burnaby, BC")}" target="_blank">從 Burnaby 住宿規劃大眾運輸 ↗</a>`);});
  m.fitBounds(bounds,{padding:[18,18]});
