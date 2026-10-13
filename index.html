@@ -35,7 +35,7 @@ h1{font-size:clamp(27px,6vw,44px);line-height:1.14;letter-spacing:-.045em;margin
 .section-head h2{font-size:21px;margin:0;letter-spacing:-.03em}
 .section-head p{margin:3px 0 0;font-size:12px;color:var(--muted)}
 .day-strip{display:flex;gap:8px;overflow-x:auto;padding:3px 0 12px;scrollbar-width:none}
-.day-chip{flex:0 0 auto;width:67px;border:1px solid var(--line);background:var(--card);border-radius:14px;padding:9px 5px;text-align:center;cursor:pointer;color:var(--muted)}
+.summary-card{border:1px solid var(--line);border-radius:20px;background:var(--card);padding:16px;margin:12px 0 16px;box-shadow:var(--shadow)}.summary-card h3{margin:0 0 5px;font-size:18px}.summary-card .summary-sub{font-size:12px;color:var(--muted);margin:0 0 12px}.summary-list{display:grid;grid-template-columns:1fr;gap:8px}.summary-item{display:flex;align-items:center;gap:10px;text-align:left;border:1px solid var(--line);border-radius:12px;background:#fffefa;padding:10px;color:var(--ink);cursor:pointer;width:100%}.summary-date{flex:0 0 48px;font-size:11px;font-weight:800;color:var(--sage)}.summary-item strong{display:block;font-size:13px}.summary-item small{display:block;color:var(--muted);font-size:11px;margin-top:2px}.summary-item:hover{border-color:var(--sage)}@media(min-width:700px){.summary-list{grid-template-columns:1fr 1fr}}\n.day-chip{flex:0 0 auto;width:67px;border:1px solid var(--line);background:var(--card);border-radius:14px;padding:9px 5px;text-align:center;cursor:pointer;color:var(--muted)}
 .day-chip strong{display:block;color:var(--ink);font-size:17px}.day-chip small{font-size:10px}.day-chip.active{background:var(--sage);border-color:var(--sage);color:white}.day-chip.active strong{color:white}
 .day-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px}
 .day-cover{height:180px;position:relative;background:#dfe3dc}
@@ -102,7 +102,7 @@ h1{font-size:clamp(27px,6vw,44px);line-height:1.14;letter-spacing:-.045em;margin
 <main>
 <section class="panel active" id="itinerary">
 <div class="section-head"><div><h2>每日行程</h2><p>點日期快速跳轉；天氣區塊只顯示可確認的預報。</p></div><button class="btn" id="weatherRefresh">↻ 更新天氣</button></div>
-<div class="day-strip" id="dayStrip"></div>
+<div class="summary-card" id="dailySummary"><h3>🗓️ 每日行程總覽</h3><p class="summary-sub">快速查看每天主題；點擊任一天即可跳到詳細行程。</p><div class="summary-list" id="summaryList"></div></div>\n<div class="day-strip" id="dayStrip"></div>
 <div id="days"></div>
 </section>
 <section class="panel" id="map">
@@ -170,23 +170,29 @@ h1{font-size:clamp(27px,6vw,44px);line-height:1.14;letter-spacing:-.045em;margin
 <nav class="bottom-nav"><div class="bottom-inner"><button class="active" data-panel="itinerary"><span>▦</span>行程</button><button data-panel="map"><span>⌖</span>地圖</button><button data-panel="food"><span>♨</span>美食</button><button data-panel="info"><span>▤</span>資訊</button><button data-panel="checklist"><span>✓</span>清單</button></div></nav>
 <script>
 const photos={
-  city:"https://thumb.wikimedia.org/wikipedia/commons/thumb/4/47/English_Bay_Vancouver.jpg/960px-English_Bay_Vancouver.jpg",
+  arrival:"https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1200&q=85",
+  farm:"https://images.unsplash.com/photo-1506976785307-8732e854ad03?auto=format&fit=crop&w=1200&q=85",
+  outlet:"https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=85",
   victoria:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Victoria%2C_BC_-_British_Columbia_Parliament_Buildings_%2851108379970%29.jpg/960px-Victoria%2C_BC_-_British_Columbia_Parliament_Buildings_%2851108379970%29.jpg",
+  downtown:"https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1200&q=85",
+  granville:"https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?auto=format&fit=crop&w=1200&q=85",
+  seatosky:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=85",
   capilano:"https://thumb.wikimedia.org/wikipedia/commons/thumb/4/46/Capilano_Suspension_Bridge%2C_West_Vancouver%2C_Canada_%28Unsplash%29.jpg/960px-Capilano_Suspension_Bridge%2C_West_Vancouver%2C_Canada_%28Unsplash%29.jpg",
-  stanley:"https://thumb.wikimedia.org/wikipedia/commons/thumb/5/51/Stanley_Park_Seawall.jpg/960px-Stanley_Park_Seawall.jpg"
+  stanley:"https://thumb.wikimedia.org/wikipedia/commons/thumb/5/51/Stanley_Park_Seawall.jpg/960px-Stanley_Park_Seawall.jpg",
+  return:"https://images.unsplash.com/photo-1517479149777-5f3b1511d5ad?auto=format&fit=crop&w=1200&q=85"
 };
 const days=[
-{date:"10/30",dow:"五",title:"抵達 Vancouver",theme:"ARRIVAL",intro:"CI 032 預定當地時間 19:00 抵達 YVR（請以電子機票為準）。建議先在機場吃 A&W，再搭大眾運輸前往 Burnaby 住宿；不建議落地當晚特地繞去 Chipotle。",weather:"Vancouver",photo:"city",places:[
+{date:"10/30",dow:"五",title:"抵達 Vancouver",theme:"ARRIVAL",intro:"CI 032 預定當地時間 19:00 抵達 YVR（請以電子機票為準）。建議先在機場吃 A&W，再搭大眾運輸前往 Burnaby 住宿；不建議落地當晚特地繞去 Chipotle。",weather:"Vancouver",photo:"arrival",places:[
 {type:"交通",name:"CI 032 抵達 YVR → Burnaby 住宿",address:"Vancouver International Airport → Burnaby, BC",desc:"CI 032 預定 10/30 19:00 抵達 Vancouver（當地時間；請以電子機票／航班通知為準）。入境領行李後，從 YVR-Airport Station 搭 Canada Line；Google Maps 會依當時班次安排轉乘 SkyTrain／最後一段步行或公車到住宿。常見路線會經 Downtown 轉乘，但以當日路線規劃器為準。請預留入境、行李與轉乘時間。注意：從 YVR 出發的部分 Canada Line 行程會加收 YVR Airport AddFare，現在官方公布為 CAD 6.50；付款方式與適用情況請看 TransLink。",map:"Burnaby, BC",routeFrom:"Vancouver International Airport",tags:["CI 032 已確認","大眾運輸"],link:"https://www.translink.ca/rider-guide/destinations/yvr-airport"},
 {type:"住宿",name:"Burnaby 住宿（每日固定出發點）",address:"Burnaby, BC",desc:"依最新規劃，每天都從此地址出發，假設住到 11/7。請確認實際訂房已涵蓋 10/30–11/7。",map:"Burnaby, BC",tags:["住宿基準","確認訂房日期"]},
 {type:"餐廳",name:"A&W Canada（落地晚餐優先）",address:"YVR Airport, 3211 Grant McConachie Way, Richmond, BC",routeFrom:"Vancouver International Airport",desc:"YVR 機場有 A&W 分店，商家資料目前列為 24 小時營業。若 CI 032 約 19:00 抵達，先在機場吃再出發比較順；實際營業與可進入區域以機場當日資訊為準。",map:"A&W Canada YVR Airport 3211 Grant McConachie Way Richmond",tags:["落地晚餐","目前列 24 小時"],link:"https://www.yvr.ca/en/passengers/navigate-yvr/terminal-maps"},
 {type:"餐廳",name:"Chipotle（建議改排其他日）",address:"4700 Kingsway #2200, Burnaby, BC",desc:"Metrotown 一帶有 Chipotle，但從 YVR 抵達後先去住宿再繞去吃，會增加交通與時間壓力。建議留到 11/3 市區購物日或其他白天。",map:"Chipotle 4700 Kingsway Burnaby",tags:["改排其他日"],link:"https://www.google.com/maps/search/?api=1&query=Chipotle+4700+Kingsway+Burnaby"}
 ]},
-{date:"10/31",dow:"六",title:"南瓜農場日",theme:"PUMPKIN PATCH",intro:"早上去 Southlands Heritage Farm 參加 Pumpkin Fest。活動適合預留 2–3 小時；下午可視體力去 Kerrisdale 喝咖啡，不再塞大型景點。",weather:"Vancouver Southlands",photo:"city",places:[
+{date:"10/31",dow:"六",title:"南瓜農場日",theme:"PUMPKIN PATCH",intro:"早上去 Southlands Heritage Farm 參加 Pumpkin Fest。活動適合預留 2–3 小時；下午可視體力去 Kerrisdale 喝咖啡，不再塞大型景點。",weather:"Vancouver Southlands",photo:"farm",places:[
 {type:"景點",name:"Southlands Heritage Farm · Pumpkin Fest",address:"3208 W 51st Ave, Vancouver, BC",desc:"南瓜、農場動物與季節活動。官方目前列出的活動日期為 9/26–10/31；週末 09:00–17:00，CAD 15 含一顆南瓜。2026 活動詳情請出發前再確認。",map:"Southlands Heritage Farm 3208 W 51st Ave Vancouver",tags:["必去","必買／南瓜","需確認活動"],link:"https://southlandsfarm.pike13.com/pages/home"},
 {type:"景點",name:"Kerrisdale 商店街（選配）",address:"Kerrisdale, Vancouver, BC",desc:"農場結束後找咖啡或小店，若交通不順就直接回住宿休息。",map:"Kerrisdale Vancouver BC",tags:["彈性安排"]}
 ]},
-{date:"11/1",dow:"日",title:"Outlet 全天購物",theme:"SHOPPING DAY",intro:"今天整天留給 Outlet，不排其他景點。建議先列好想買的品牌與尺寸，分兩輪逛，中間安排午餐休息。",weather:"Richmond",photo:"city",places:[
+{date:"11/1",dow:"日",title:"Outlet 全天購物",theme:"SHOPPING DAY",intro:"今天整天留給 Outlet，不排其他景點。建議先列好想買的品牌與尺寸，分兩輪逛，中間安排午餐休息。",weather:"Richmond",photo:"outlet",places:[
 {type:"景點",name:"McArthurGlen Designer Outlet Vancouver Airport",address:"7899 Templeton Station Rd #1000, Richmond, BC",desc:"搭 Canada Line 到 Templeton 站，再依現場指標步行前往。先前查到的公開時間為每日 10:00–21:00；出發前確認。優先逛 Coach、Icebreaker、The North Face；Lululemon 建議留到 11/3 Robson Street 市區分店。",map:"McArthurGlen Designer Outlet 7899 Templeton Station Road Richmond",tags:["必買／服飾鞋款","全天安排"],link:"https://www.mcarthurglen.com/en/outlets/ca/designer-outlet-vancouver/"},
 {type:"交通",name:"Canada Line · Templeton Station",address:"Templeton Station, Richmond, BC",desc:"往返市區及機場方向的軌道交通。請確認當日班次與票價。",map:"Templeton Station Richmond BC",tags:["大眾運輸"]}
 ]},
@@ -196,7 +202,7 @@ const days=[
 {type:"景點",name:"Inner Harbour",address:"Victoria Inner Harbour, Victoria, BC",desc:"海港景觀與城市地標集中，可慢慢散步拍照。",map:"Victoria Inner Harbour",tags:["海港散步"]},
 {type:"景點",name:"Government Street／Victoria Downtown",address:"Government St, Victoria, BC",desc:"逛市中心商店、找咖啡與午餐；以回程渡輪時間為優先。",map:"Government Street Victoria BC",tags:["咖啡／小店"]}
 ]},
-{date:"11/3",dow:"二",title:"Robson 購物・Pender Street・Gastown",theme:"CITY & HERITAGE",intro:"市區購物與歷史街區日。先逛 Robson Street 的 Aritzia／Lululemon，再依體力安排 Chinatown 的 Pender Street 與 Gastown Steam Clock。Woolove Apparel 可列為選配，但需額外轉乘；Vessi Metrotown 與 Thomas Haas Broadway 店不在這條主線上，先不硬塞。Pender Street 請以主要街道與白天時段為主。",weather:"Downtown Vancouver",photo:"city",places:[
+{date:"11/3",dow:"二",title:"Robson 購物・Pender Street・Gastown",theme:"CITY & HERITAGE",intro:"市區購物與歷史街區日。先逛 Robson Street 的 Aritzia／Lululemon，再依體力安排 Chinatown 的 Pender Street 與 Gastown Steam Clock。Woolove Apparel 可列為選配，但需額外轉乘；Vessi Metrotown 與 Thomas Haas Broadway 店不在這條主線上，先不硬塞。Pender Street 請以主要街道與白天時段為主。",weather:"Downtown Vancouver",photo:"downtown",places:[
 {type:"景點",name:"Aritzia · Robson Street",address:"1100 Robson St, Vancouver, BC",desc:"你指定必逛的購物點。建議先逛品牌，再把周邊店鋪當作自由時間。",map:"Aritzia 1100 Robson Street Vancouver",tags:["必買","購物"],link:"https://www.aritzia.com/"},
 {type:"餐廳",name:"Five Guys 或 Chipotle",address:"Robson Street 周邊分店",desc:"Five Guys 可考慮漢堡與薯條；Chipotle 可選 Burrito Bowl。依當天營業時間選擇。",map:"Five Guys Robson Street Vancouver",tags:["必吃選項","快速午餐"]},
 {type:"購物",name:"Woolove Apparel（市區選配）",address:"2015 Main St, Vancouver, BC",desc:"依你的要求列入市區選配；不在 Robson／Gastown 主步行線上，若當天不想額外轉乘可略過。",map:"Woolove Apparel 2015 Main Street Vancouver",tags:["選配","市區店"]},
@@ -204,19 +210,19 @@ const days=[
 {type:"景點",name:"Gastown Steam Clock",address:"305 Water St, Vancouver, BC（附近路口）",desc:"蒸汽鐘與紅磚街景是經典拍照點。這區街景差異較大，建議走觀光主街、留意隨身物品。",map:"Gastown Steam Clock Vancouver",tags:["經典地標"]},
 {type:"餐廳",name:"La Belle Patate（可選晚餐）",address:"1215 Davie St, Vancouver, BC",desc:"魁北克風味 Poutine；如果今天已經吃過漢堡，可把它留作其他日子的替代選項。",map:"La Belle Patate 1215 Davie Street Vancouver",tags:["必點／Poutine"]}
 ]},
-{date:"11/4",dow:"三",title:"Granville Island 美食散步",theme:"MARKET & BITES",intro:"若能在今天退房搬到市區，先確認新住宿可否寄放行李。市場小吃建議分享，不必每家都點完整份。",weather:"Granville Island",photo:"stanley",places:[
+{date:"11/4",dow:"三",title:"Granville Island 美食散步",theme:"MARKET & BITES",intro:"若能在今天退房搬到市區，先確認新住宿可否寄放行李。市場小吃建議分享，不必每家都點完整份。",weather:"Granville Island",photo:"granville",places:[
 {type:"景點",name:"Granville Island Public Market",address:"1689 Johnston St, Vancouver, BC",desc:"市場適合邊走邊吃，並留時間逛海港。先前查到公開時間每日 09:00–18:00；各攤位時間可能不同。",map:"Granville Island Public Market 1689 Johnston Street Vancouver",tags:["必去","美食市場"],link:"https://granvilleisland.com/"},
 {type:"餐廳",name:"Lee’s Donuts",address:"Granville Island Public Market",desc:"甜甜圈適合當點心或早餐。",map:"Lee's Donuts Granville Island",tags:["必吃甜點","甜甜圈"]},
 {type:"餐廳",name:"The Lobster Man",address:"Granville Island, Vancouver, BC",desc:"你的海鮮清單之一；可留意龍蝦與龍蝦卷類選項，供應依當日為準。",map:"The Lobster Man Granville Island",tags:["海鮮","必吃選項"]},
 {type:"餐廳",name:"A La Mode Pie Café",address:"Granville Island, Vancouver, BC",desc:"可考慮 clam chowder 或鹹派，適合冷天吃熱食。",map:"A La Mode Pie Cafe Granville Island",tags:["必點／Clam Chowder"]},
 {type:"餐廳",name:"La Bise Canelés／JJ Bean",address:"Granville Island 或當日順路分店",desc:"La Bise 可當法式可麗露甜點；JJ Bean 作為咖啡休息點。",map:"La Bise Caneles Granville Island",tags:["伴手禮／可麗露","咖啡"]}
 ]},
-{date:"11/5",dow:"四",title:"Sea to Sky Gondola 山海一日遊",theme:"MOUNTAIN & FOREST",intro:"以 Sea to Sky Gondola 取代 Banff／Lake Louise。大眾運輸銜接較不方便，建議預訂從 Vancouver 出發的一日團或接駁。",weather:"Squamish, BC",photo:"capilano",places:[
+{date:"11/5",dow:"四",title:"Sea to Sky Gondola 山海一日遊",theme:"MOUNTAIN & FOREST",intro:"以 Sea to Sky Gondola 取代 Banff／Lake Louise。大眾運輸銜接較不方便，建議預訂從 Vancouver 出發的一日團或接駁。",weather:"Squamish, BC",photo:"seatosky",places:[
 {type:"交通",name:"Vancouver → Squamish 一日團／接駁",address:"出發集合點依團方通知",desc:"目前尚未預訂。請確認接駁點、往返時間、是否包含 Shannon Falls。",map:"Vancouver BC",tags:["重要預約","待預訂"]},
 {type:"景點",name:"Sea to Sky Gondola",address:"36800 Highway 99, Squamish, BC",desc:"搭纜車上山，欣賞 Howe Sound 海灣與山林。官方目前列出 10/31–11/8 每日 09:00–17:00，最後下山纜車 18:00；11/9 起維修關閉。天氣會影響能見度。",map:"Sea to Sky Gondola 36800 Highway 99 Squamish",tags:["必去","山景","確認營運"],link:"https://www.seatoskygondola.com/hours-and-prices/"},
 {type:"景點",name:"Shannon Falls（視團路線）",address:"Squamish, BC",desc:"瀑布可作為加碼停留，但只有在接駁或一日團包含時才加入，避免交通接不上。",map:"Shannon Falls Provincial Park Squamish",tags:["選配","自然景觀"]}
 ]},
-{date:"11/6",dow:"五",title:"Capilano 吊橋・Cliffwalk",theme:"RAINFOREST WALK",intro:"上午安排雨林吊橋與懸崖步道，預留約 2–3 小時。回市區後如果想吃 Joe Fortes 的 Happy Hour，需控制離園與交通時間。",weather:"North Vancouver",photo:"victoria",places:[
+{date:"11/6",dow:"五",title:"Capilano 吊橋・Cliffwalk",theme:"RAINFOREST WALK",intro:"上午安排雨林吊橋與懸崖步道，預留約 2–3 小時。回市區後如果想吃 Joe Fortes 的 Happy Hour，需控制離園與交通時間。",weather:"North Vancouver",photo:"capilano",places:[
 {type:"景點",name:"Capilano Suspension Bridge Park",address:"3735 Capilano Rd, North Vancouver, BC",desc:"園區包含 Suspension Bridge、Cliffwalk 與 Treetops Adventure。官方目前列出 11/2–11/19 為 10:00–17:00；入園時段與票價需確認。",map:"Capilano Suspension Bridge Park 3735 Capilano Road",tags:["必去","吊橋","懸崖步道"],link:"https://www.capbridge.com/tickets-and-hours/"},
 {type:"餐廳",name:"Joe Fortes Seafood & Chop House",address:"777 Thurlow St, Vancouver, BC",desc:"你想吃的海鮮與生蠔 Happy Hour 選項。先前查到 Happy Hour 15:00–17:00，但當日菜單、價格與生蠔供應需確認。",map:"Joe Fortes Seafood Chop House 777 Thurlow Street Vancouver",tags:["必吃海鮮","生蠔 Happy Hour"],link:"https://www.joefortes.ca/"},
 {type:"餐廳",name:"La Belle Patate（替代）",address:"1215 Davie St, Vancouver, BC",desc:"如果不想吃正式海鮮晚餐，可改吃 Poutine；不需要兩家都排。",map:"La Belle Patate 1215 Davie Street Vancouver",tags:["必點／Poutine"]}
@@ -228,7 +234,7 @@ const days=[
 {type:"景點",name:"English Bay Beach（與 Sylvia Hotel 同區）",address:"English Bay Beach, Vancouver, BC",desc:"海邊散步作為最後一站。11 月日落較早，請預留回住宿拿行李與前往機場時間。",map:"English Bay Beach Vancouver",tags:["海岸散步"]},
 {type:"交通",name:"前往 YVR · CI 031",address:"Vancouver International Airport",desc:"CI 031 於 2026/11/8 凌晨 01:00 起飛，因此請在 11/7 晚上前往機場。確認當晚 Canada Line 班次與航空公司報到截止時間。",map:"Vancouver International Airport",tags:["重要航班","不要延誤"]}
 ]},
-{date:"11/8",dow:"日",title:"凌晨返程",theme:"FLIGHT HOME",intro:"不再安排景點。請以航空公司規定為準，提早到 YVR 完成報到與安檢。",weather:"YVR Airport",photo:"city",places:[
+{date:"11/8",dow:"日",title:"凌晨返程",theme:"FLIGHT HOME",intro:"不再安排景點。請以航空公司規定為準，提早到 YVR 完成報到與安檢。",weather:"YVR Airport",photo:"return",places:[
 {type:"交通",name:"Vancouver International Airport（YVR）",address:"Vancouver International Airport, Richmond, BC",desc:"回程航班：China Airlines CI 031，11/8 01:00 起飛。報到櫃檯與行李資訊待補。",map:"Vancouver International Airport",tags:["CI 031","航班提醒"]}
 ]}
 ];
@@ -255,12 +261,19 @@ function tagHtml(t){let c="info";if(/必去|必吃|必點|生蠔|海鮮|必買/.
 function weatherBox(loc,date){const coords={"Vancouver":[49.2827,-123.1207],"Vancouver Southlands":[49.2208,-123.1743],"Richmond":[49.1666,-123.1336],"Victoria, BC":[48.4284,-123.3656],"Downtown Vancouver":[49.2827,-123.1207],"Granville Island":[49.2712,-123.1340],"Squamish, BC":[49.7016,-123.1558],"North Vancouver":[49.3429,-123.1149],"YVR Airport":[49.1967,-123.1815]};const c=coords[loc]||coords["Vancouver"];return `<div class="weather" data-weather-location="${loc}" data-weather-date="${date}" data-lat="${c[0]}" data-lon="${c[1]}"><div class="weather-icon">☁</div><div><strong>${loc} 天氣</strong><small class="wx-detail">尚未取得該日期的可靠預報。</small></div><div class="weather-status">待更新</div></div>`}
 function placeCard(p){const tags=(p.tags||[]).map(tagHtml).join("");return `<article class="place"><div class="place-head"><h4>${p.name}</h4><span class="tag info">${p.type}</span></div><div class="address">${p.address}</div>${tags?`<div class="tags">${tags}</div>`:""}<p>${p.desc}</p><div class="actions"><a class="btn primary" href="${mapUrl(p.map,"transit",p.routeFrom||"Burnaby, BC")}" target="_blank" rel="noopener">↗ 大眾運輸導航</a>${p.link?`<a class="btn" href="${p.link}" target="_blank" rel="noopener">官方資訊</a>`:""}</div></article>`}
 days.forEach((d,i)=>{
+ document.getElementById("summaryList").insertAdjacentHTML("beforeend",`<button type="button" class="summary-item" data-summary-day="${i}"><span class="summary-date">${d.date}</span><span><strong>${d.title}</strong><small>${d.intro}</small></span></button>`);
  dayStrip.insertAdjacentHTML("beforeend",`<button class="day-chip ${i===0?"active":""}" data-day="${i}"><small>${d.dow}曜日</small><strong>${d.date}</strong></button>`);
  const groups=["景點","餐廳","交通","住宿"];let groupHtml="";
  groups.forEach(g=>{let ps=d.places.filter(p=>p.type===g);if(ps.length)groupHtml+=`<div class="category-title">${g==="景點"?"◌ 景點與體驗":g==="餐廳"?"⌁ 餐廳與咖啡":g==="交通"?"↗ 交通與導航":"⌂ 住宿"} </div>${ps.map(placeCard).join("")}`});
  daysEl.insertAdjacentHTML("beforeend",`<article class="day-card" id="day-${i}"><div class="day-cover"><img src="${photos[d.photo]||photos.city}" alt="${d.title}實景照片" loading="lazy"><span class="cover-label">${d.theme}</span></div><div class="day-content"><div class="day-top"><h3>${d.title}</h3><span class="day-date">${d.date} · 2026</span></div><p class="day-intro">${d.intro}</p>${weatherBox(d.weather,d.date)}${groupHtml}<div class="actions"><a class="btn dark daily-route-link" data-route-date="${d.date}" data-route-destination="${encodeURIComponent(d.places[0].map)}" href="https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(i===0?"Vancouver International Airport":"Burnaby, BC")}&destination=${encodeURIComponent(d.places[0].map)}&travelmode=transit" target="_blank" rel="noopener">${i===0?"從 YVR 規劃今日交通":"從住宿規劃今日交通"} ↗</a></div></div></article>`);
 });
 dayStrip.addEventListener("click",e=>{let b=e.target.closest("[data-day]");if(!b)return;document.querySelectorAll(".day-chip").forEach(x=>x.classList.toggle("active",x===b));document.getElementById("day-"+b.dataset.day).scrollIntoView({behavior:"smooth",block:"start"})});
+document.getElementById("summaryList").addEventListener("click",e=>{
+ const b=e.target.closest("[data-summary-day]");if(!b)return;
+ document.querySelectorAll(".day-chip").forEach(x=>x.classList.toggle("active",x.dataset.day===b.dataset.summaryDay));
+ document.getElementById("day-"+b.dataset.summaryDay).scrollIntoView({behavior:"smooth",block:"start"});
+});
+
 
 // Local-only route planner. Custom address is not written into the public HTML.
 const routeDates = days.map(d=>({label:`2026/${d.date}`,key:d.date}));
@@ -373,7 +386,7 @@ const souvenirs=[
 {name:"Granville Island 市場食品",day:"11/4 · Granville Island Public Market",items:"包裝零食、咖啡、甜點或當地食品",map:"Granville Island Public Market Vancouver",note:"挑選包裝完整、保存期限清楚的商品；入境規定需確認。"},
 {name:"McArthurGlen Outlet 採買",day:"11/1 · Richmond",items:"服飾、鞋款、運動品牌商品",map:"McArthurGlen Designer Outlet Vancouver Airport",note:"建議先列品牌、尺寸與預算。"}
 ];
-document.getElementById("souvenirList").innerHTML=souvenirs.map(s=>`<article class="food-card">${s.image?`<img src="${s.image}" alt="${s.name}" loading="lazy" style="width:100%;max-height:240px;object-fit:contain;background:#fff;border-radius:12px;margin-bottom:10px">`:""}<div class="place-head"><h3>${s.name}</h3>${tagHtml("伴手禮／採買")}</div><p>${s.day}</p><p><b>${s.items}</b></p><p>${s.note}</p><a class="btn primary" href="${mapUrl(s.map)}" target="_blank" rel="noopener">Google Maps ↗</a></article>`).join("");
+const uniqueSouvenirs=souvenirs.filter((s,i,a)=>a.findIndex(x=>x.name.trim().toLowerCase()===s.name.trim().toLowerCase())===i);\ndocument.getElementById("souvenirList").innerHTML=uniqueSouvenirs.map(s=>`<article class="food-card">${s.image?`<img src="${s.image}" alt="${s.name}" loading="lazy" style="width:100%;max-height:240px;object-fit:contain;background:#fff;border-radius:12px;margin-bottom:10px">`:""}<div class="place-head"><h3>${s.name}</h3>${tagHtml("伴手禮／採買")}</div><p>${s.day}</p><p><b>${s.items}</b></p><p>${s.note}</p><a class="btn primary" href="${mapUrl(s.map)}" target="_blank" rel="noopener">Google Maps ↗</a></article>`).join("");
 
 const checklist=["確認 CI 032 去程航班時間與報到資訊","確認 Burnaby 住宿是否已訂到 11/7","預訂／確認 Victoria 渡輪去回程","確認 Sea to Sky 一日團或接駁","確認 Capilano 入園票與時段","確認 Joe Fortes Happy Hour 與生蠔供應","確認 Vancouver 市區住宿與行李寄放","查看天氣、雨具與山區步道狀況","確認 11/7 晚上前往 YVR 的交通","確認 CI 031 報到截止時間與行李規定"];
 document.getElementById("checks").innerHTML=checklist.map((c,i)=>`<label class="checkrow"><input type="checkbox" data-check="${i}"><span>${c}</span></label>`).join("");
