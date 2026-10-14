@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f3ee">
+<title>Vancouver Notes｜秋日旅行</title>
+<style>
+:root{--paper:#f5f3ee;--card:#fffefa;--ink:#242720;--muted:#74766d;--line:#e4e1d8;--sage:#687b67;--sage-light:#e5ebe2;--sand:#eee5d7;--rose:#f4e5e0;--blue:#e5edf0;--shadow:0 8px 26px rgba(34,38,30,.055);--radius:20px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC",sans-serif;line-height:1.55}
+button,input,textarea,select{font:inherit}button,a{tap-highlight-color:transparent}a{color:inherit}
+.app{max-width:1040px;margin:0 auto;padding:0 16px 92px}
+header{padding:24px 0 14px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.brand{font-size:11px;letter-spacing:.2em;color:var(--sage);font-weight:750;text-transform:uppercase}
+h1{font-size:clamp(27px,6vw,44px);line-height:1.14;letter-spacing:-.045em;margin:8px 0}
+.subtitle{font-size:13px;color:var(--muted);max-width:500px}
+.date-pill{white-space:nowrap;border:1px solid var(--line);border-radius:99px;padding:7px 10px;font-size:11px;color:var(--muted);background:#fffefa}
+.hero{position:relative;overflow:hidden;border-radius:26px;min-height:225px;background:#d8ddd4;box-shadow:var(--shadow);margin:10px 0 18px}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.72)}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,30,24,.6),rgba(20,30,24,.04))}
+.hero-copy{position:relative;z-index:1;color:white;padding:25px 22px;max-width:520px}
+.hero-kicker{font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.85}
+.hero-copy h2{font-size:28px;line-height:1.2;margin:8px 0}
+.hero-copy p{font-size:13px;max-width:330px;color:#f2f2ed}
+.hero-foot{display:flex;gap:7px;flex-wrap:wrap;margin-top:16px}
+.hero-foot span{border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.13);border-radius:99px;padding:5px 9px;font-size:11px}
+.quick-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:12px}
+.stat b{display:block;font-size:18px;letter-spacing:-.03em}.stat span{font-size:11px;color:var(--muted)}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:5px;margin:0 -5px 18px;scrollbar-width:none}
+.tabs button{flex:0 0 auto;border:1px solid transparent;background:transparent;color:var(--muted);border-radius:99px;padding:10px 14px;font-size:13px}
+.tabs button.active{background:var(--ink);color:white}
+.panel{display:none}.panel.active{display:block}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:10px;margin:22px 0 12px}
+.section-head h2{font-size:21px;margin:0;letter-spacing:-.03em}
+.section-head p{margin:3px 0 0;font-size:12px;color:var(--muted)}
+.day-strip{display:flex;gap:8px;overflow-x:auto;padding:3px 0 12px;scrollbar-width:none}
+.summary-card{border:1px solid var(--line);border-radius:20px;background:var(--card);padding:16px;margin:12px 0 16px;box-shadow:var(--shadow)}.summary-card h3{margin:0 0 5px;font-size:18px}.summary-card .summary-sub{font-size:12px;color:var(--muted);margin:0 0 12px}.summary-list{display:grid;grid-template-columns:1fr;gap:8px}.summary-item{display:flex;align-items:center;gap:10px;text-align:left;border:1px solid var(--line);border-radius:12px;background:#fffefa;padding:10px;color:var(--ink);cursor:pointer;width:100%}.summary-date{flex:0 0 48px;font-size:11px;font-weight:800;color:var(--sage)}.summary-item strong{display:block;font-size:13px}.summary-item small{display:block;color:var(--muted);font-size:11px;margin-top:2px}.summary-item:hover{border-color:var(--sage)}@media(min-width:700px){.summary-list{grid-template-columns:1fr 1fr}}\n.day-chip{flex:0 0 auto;width:67px;border:1px solid var(--line);background:var(--card);border-radius:14px;padding:9px 5px;text-align:center;cursor:pointer;color:var(--muted)}
+.day-chip strong{display:block;color:var(--ink);font-size:17px}.day-chip small{font-size:10px}.day-chip.active{background:var(--sage);border-color:var(--sage);color:white}.day-chip.active strong{color:white}
+.day-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px}
+.day-cover{height:180px;position:relative;background:#dfe3dc}
+.day-cover img{width:100%;height:100%;object-fit:cover;display:block}
+.cover-label{position:absolute;left:14px;bottom:12px;background:rgba(255,254,250,.94);border-radius:99px;padding:6px 10px;font-size:11px;color:var(--ink)}
+.day-content{padding:17px}
+.day-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.day-top h3{font-size:21px;line-height:1.25;margin:0;letter-spacing:-.035em}
+.day-date{font-size:11px;color:var(--sage);font-weight:750;white-space:nowrap}
+.day-intro{font-size:13px;color:var(--muted);margin:9px 0 13px}
+.weather{display:flex;align-items:center;gap:10px;border-radius:14px;background:#f0f1eb;padding:11px 12px;margin:13px 0 17px}
+.weather-icon{font-size:22px}.weather strong{display:block;font-size:12px}.weather small{display:block;color:var(--muted);font-size:11px}.weather .weather-status{margin-left:auto;font-size:10px;color:var(--sage);text-align:right}
+.category-title{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px;font-weight:750}
+.place{border:1px solid var(--line);border-radius:15px;padding:13px;margin:8px 0;background:#fff}
+.place-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.place h4{margin:0;font-size:15px;line-height:1.35}.place .address{font-size:11px;color:var(--muted);margin:4px 0 7px}
+.place p{font-size:12px;color:#55584f;margin:7px 0}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin:7px 0}
+.tag{display:inline-flex;align-items:center;border-radius:6px;padding:4px 7px;font-size:10px;font-weight:700}
+.tag.must{background:#f5dfd7;color:#8b4736}.tag.food{background:#f2e6c9;color:#73571e}.tag.buy{background:#dfe9d9;color:#426043}.tag.story{background:#e2e8ed;color:#425b6a}.tag.book{background:#eadff0;color:#704c7b}.tag.info{background:#eeece6;color:#66675f}
+.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;border:1px solid var(--line);border-radius:10px;background:#faf9f5;padding:8px 11px;font-size:11px;font-weight:700;cursor:pointer}
+.btn.primary{background:var(--sage);border-color:var(--sage);color:#fff}.btn.dark{background:var(--ink);border-color:var(--ink);color:white}
+.route-line{display:flex;gap:9px;margin:11px 0;align-items:flex-start}.route-dot{width:22px;height:22px;flex:0 0 22px;border-radius:50%;background:var(--sage-light);color:var(--sage);display:grid;place-items:center;font-size:11px;font-weight:800}.route-line b{font-size:12px}.route-line p{margin:2px 0 0;color:var(--muted);font-size:11px}
+.note{border-left:3px solid var(--sage);padding:10px 12px;background:#f0f2ec;border-radius:0 10px 10px 0;font-size:12px;margin:12px 0}
+.notice{border:1px solid #ead8bb;background:#fbf2e2;border-radius:14px;padding:12px 13px;font-size:12px;margin:12px 0}
+.map-grid{display:grid;grid-template-columns:1fr;gap:10px}#leafletMap{height:360px;border-radius:18px;border:1px solid var(--line);overflow:hidden;background:#e8e8df;margin:12px 0 18px}.map-hint{font-size:11px;color:var(--muted);margin:6px 0 12px}
+.map-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+.map-row b{font-size:13px}.map-row small{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+.route-planner{border:1px solid var(--line);border-radius:18px;background:var(--card);padding:16px;margin:14px 0}.route-fields{display:grid;grid-template-columns:1fr;gap:12px}.route-fields input,.route-fields select{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px;background:#fff;color:var(--ink);font:inherit}.route-fields label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}.route-status{font-size:12px;color:var(--muted);margin-top:10px}.route-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}@media(min-width:700px){.route-fields{grid-template-columns:2fr 1fr 1fr}}
+.info-grid{display:grid;grid-template-columns:1fr;gap:12px}
+.info-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:17px}
+.info-card h3{margin:0 0 12px;font-size:17px}.field{margin:11px 0}.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:5px}
+.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:10px;background:#fffefa;padding:10px 11px;color:var(--ink);font-size:13px}
+.field textarea{min-height:80px;resize:vertical}
+.checkrow{display:flex;align-items:flex-start;gap:9px;padding:10px 0;border-bottom:1px solid var(--line);font-size:12px}.checkrow:last-child{border:0}.checkrow input{accent-color:var(--sage);margin-top:4px}
+.food-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.flight-ticket{border:1px solid var(--line);border-radius:24px;background:#fffefa;padding:18px;margin:12px 0 16px;box-shadow:var(--shadow)}.ticket-top{display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:12px;color:var(--muted)}.ticket-no{font-family:ui-monospace,monospace;font-weight:800;font-size:20px;letter-spacing:.12em;color:var(--ink)}.ticket-route{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin:15px 0}.ticket-code{font-family:Georgia,serif;font-size:clamp(30px,7vw,46px);line-height:1}.ticket-time{font-family:ui-monospace,monospace;font-size:13px;letter-spacing:.03em;color:var(--muted)}.ticket-arrow{text-align:center;color:#aaa;font-size:13px}.ticket-arrow:after{content:"";display:block;width:70px;border-top:1px solid var(--line);margin:8px auto}.ticket-note{font-size:12px;color:#b64c34;margin-top:12px}.stay-card{border:1px solid var(--line);border-radius:24px;background:#fffefa;padding:18px;margin:12px 0;box-shadow:var(--shadow)}.stay-address{font-size:20px;font-weight:750;margin:8px 0}.stay-meta{color:var(--muted);font-size:12px}
+.food-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
+.food-card h3{font-size:14px;margin:0}.food-card p{font-size:12px;color:var(--muted);margin:5px 0}
+.footer{font-size:10px;color:var(--muted);padding:22px 0 4px;border-top:1px solid var(--line);margin-top:24px}
+.bottom-nav{position:fixed;z-index:10;bottom:0;left:0;right:0;padding:8px 12px calc(8px + env(safe-area-inset-bottom));background:rgba(250,249,245,.95);backdrop-filter:blur(12px);border-top:1px solid var(--line);display:flex;justify-content:center}
+.bottom-inner{display:flex;width:100%;max-width:560px;justify-content:space-around;gap:5px}
+.bottom-inner button{border:0;background:transparent;color:var(--muted);font-size:10px;padding:6px 12px;border-radius:12px;min-width:62px}
+.bottom-inner button span{display:block;font-size:18px;margin-bottom:1px}.bottom-inner button.active{background:var(--sage-light);color:var(--sage);font-weight:750}
+.hidden{display:none!important}
+@media(min-width:700px){.app{padding:0 26px 50px}.hero{min-height:300px}.hero-copy{padding:38px}.hero-copy h2{font-size:36px}.day-strip{flex-wrap:wrap}.day-chip{width:76px}.day-cover{height:260px}.day-content{padding:22px}.map-grid{grid-template-columns:1fr 1fr}.info-grid{grid-template-columns:1fr 1fr}.food-grid{grid-template-columns:1fr 1fr}.bottom-nav{display:none}.app{padding-bottom:40px}}
+
+/* Travel budget module */
+.budget-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.budget-stat{border:1px solid var(--line);border-radius:16px;padding:13px;background:var(--card)}.budget-stat span{display:block;color:var(--muted);font-size:11px}.budget-stat strong{font-size:21px;overflow-wrap:anywhere}.budget-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px;margin:12px 0}.budget-card h3{font-size:16px;margin:0 0 10px}.budget-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.budget-form .full{grid-column:1/-1}.budget-form label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px}.budget-form input,.budget-form select,.budget-form textarea{width:100%;min-width:0;border:1px solid var(--line);border-radius:10px;padding:10px;background:white;color:var(--ink)}.budget-form input[type=checkbox]{width:auto}.budget-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.budget-list{display:grid;gap:8px}.budget-row{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:11px}.budget-row small{display:block;color:var(--muted);font-size:11px}.budget-row strong{font-size:14px}.budget-row button{border:1px solid var(--line);background:white;border-radius:8px;padding:5px 8px;font-size:11px}.member-inputs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.check-row{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--ink)}.check-row input{width:auto!important}.muted-note{font-size:11px;color:var(--muted)}.pill-note{display:inline-block;background:var(--sage-light);border-radius:99px;padding:4px 8px;font-size:10px;color:var(--sage)}@media(max-width:480px){.budget-form{grid-template-columns:1fr}.budget-form .full{grid-column:auto}.budget-grid{grid-template-columns:1fr 1fr}.budget-stat strong{font-size:18px}}
+
+</style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script></head>
+<body>
+<div class="app">
+<header>
+  <div><div class="brand">TRAVEL NOTES · BC CANADA</div><h1>Vancouver<br>秋日旅行</h1><div class="subtitle">一份慢節奏的城市手帳。海岸、森林、咖啡與在地味道。</div></div>
+  <div class="date-pill">30 OCT — 08 NOV 2026</div>
+</header>
+<section class="hero">
+  <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/4/47/English_Bay_Vancouver.jpg/960px-English_Bay_Vancouver.jpg" alt="English Bay Vancouver waterfront" loading="eager">
+  <div class="hero-copy"><div class="hero-kicker">AUTUMN JOURNAL · 10 DAYS</div><h2>在雨林與海灣之間，<br>慢慢走過 Vancouver。</h2><p>以大眾運輸為主，遠郊安排一日遊。每天留一點空白，讓天氣與心情決定步調。</p><div class="hero-foot"><span>🍂 秋色與森林</span><span>☕ 咖啡甜點</span><span>🗺️ 點擊導航</span></div></div>
+</section>
+<div class="quick-stats"><div class="stat"><b>10 days</b><span>行程日期</span></div><div class="stat"><b>Transit</b><span>主要交通</span></div><div class="stat"><b>01:00</b><span>CI 031 起飛時間</span></div></div>
+<nav class="tabs" aria-label="主分頁">
+<button class="active" data-panel="itinerary">每日行程</button><button data-panel="map">真實地圖</button><button data-panel="food">美食</button><button data-panel="souvenirs">伴手禮</button><button data-panel="info">航班・住宿・預約</button><button data-panel="checklist">出發清單</button><button data-panel="budget">記帳／分帳</button>
+</nav>
+<main>
+<section class="panel active" id="itinerary">
+<div class="section-head"><div><h2>每日行程</h2><p>點日期快速跳轉；天氣區塊只顯示可確認的預報。</p></div><button class="btn" id="weatherRefresh">↻ 更新天氣</button></div>
+<div class="summary-card" id="dailySummary"><h3>🗓️ 每日行程總覽</h3><p class="summary-sub">快速查看每天主題；點擊任一天即可跳到詳細行程。</p><div class="summary-list" id="summaryList"></div></div>\n<div class="day-strip" id="dayStrip"></div>
+<div id="days"></div>
+</section>
+<section class="panel" id="map">
+<div class="section-head"><div><h2>地圖與導航</h2><p>地點已整理成清單；導航預設大眾運輸，可在 Google Maps 改成開車。</p></div></div>
+<div class="notice">下方是真實互動地圖（Leaflet + CARTO／OpenStreetMap）。你可以在下方輸入住宿地址、選擇適用日期，套用後該日期範圍內每日的交通按鈕都會使用這個出發點。地址預設只存在目前頁面記憶體；只有勾選「記住在這台裝置」才會存到此瀏覽器。</div>
+<div class="route-planner"><h3 style="margin:0 0 8px">🧭 住宿地址與日期範圍</h3>
+<p class="subtitle">只規劃大眾運輸。Google Maps 會依所選目的地計算路線；此功能不會自動更改每天的景點順序。</p>
+<div class="route-fields"><div><label for="routeAddress">出發地址（只在本機輸入）</label><input id="routeAddress" type="text" autocomplete="street-address" placeholder="輸入住宿地址，例如 Burnaby, BC"></div>
+<div><label for="routeStart">開始日期</label><select id="routeStart"></select></div><div><label for="routeEnd">結束日期</label><select id="routeEnd"></select></div></div>
+<label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:12px"><input type="checkbox" id="routeRemember"> 記住在這台裝置（儲存在此瀏覽器；可隨時清除）</label>
+<div class="route-actions"><button class="btn primary" id="applyRoutePlan" type="button">套用日期與出發地址</button><button class="btn" id="clearRoutePlan" type="button">清除地址</button></div>
+<div class="route-status" id="routeStatus" aria-live="polite">尚未套用自訂地址。請自行輸入後套用。</div></div>
+<div id="leafletMap" role="application" aria-label="Vancouver 旅行地圖"></div><p class="map-hint">地圖需要網路載入；若底圖仍無法顯示，可能是網路、瀏覽器外掛或圖磚服務被封鎖。可切換右上角底圖，或直接使用下方 Google Maps 導航連結。</p>
+<div class="map-grid" id="mapList"></div>
+</section>
+<section class="panel" id="food">
+<div class="section-head"><div><h2>美食、必點與伴手禮</h2><p>把想吃的先收藏，當天再依路線與胃口選擇。</p></div></div>
+<div class="food-grid" id="foodList"></div>
+<div class="note"><b>備註：</b>店家菜單、口味與營業時間可能變動。以下是點餐方向，不代表當日一定供應。</div>
+</section>
+<section class="panel" id="souvenirs">
+<div class="section-head"><div><h2>伴手禮與採買清單</h2><p>獨立整理可帶走的點心、農場紀念品與購物項目。</p></div></div>
+<div class="food-grid" id="souvenirList"></div>
+<div class="note">食品入境規定、保存期限及包裝方式請依商品與返程目的地海關規定確認。此區是採買靈感，不代表商品一定有現貨。</div>
+</section>
+<section class="panel" id="info">
+<div class="section-head"><div><h2>旅行資訊本</h2><p>航班、住宿與預約資料；輸入後可暫存在此瀏覽器。</p></div></div>
+<div class="flight-ticket"><div class="ticket-top"><span class="ticket-no">CI 032</span><span>中華航空 · 10/30（五）抵達</span></div><div class="ticket-route"><div><div class="ticket-code">TPE</div><div class="ticket-time">起飛時間依電子機票</div></div><div class="ticket-arrow">— ✈ —</div><div style="text-align:right"><div class="ticket-code">YVR</div><div class="ticket-time">約 20:00（草稿）</div></div></div><div class="ticket-note">出發時間、座位、行李額度待補；抵達時間沿用草稿，請以電子機票為準。</div></div>
+<div class="flight-ticket"><div class="ticket-top"><span class="ticket-no">CI 031</span><span>中華航空 · 11/8（日）</span></div><div class="ticket-route"><div><div class="ticket-code">YVR</div><div class="ticket-time">01:00</div></div><div class="ticket-arrow">— ✈ —</div><div style="text-align:right"><div class="ticket-code">TPE</div><div class="ticket-time">抵達時間依電子機票</div></div></div><div class="ticket-note">11/7 深夜就要前往機場報到；抵達時間待補。</div></div>
+<div class="stay-card"><div class="ticket-top"><b>⌂ 住宿卡片 · 規劃假設</b><span>10/30–11/7</span></div><div class="stay-address">Burnaby 住宿（地址由你自行輸入）</div><div>Burnaby, BC, Canada</div><div class="stay-meta">假設住宿涵蓋 10/30–11/7 晚上。請在「地圖與導航」頁輸入實際地址；公開頁面不顯示完整街道地址。</div></div>
+<div class="info-grid">
+<div class="info-card"><h3>✈ 航班資訊</h3>
+<div class="field"><label>去程航班號</label><input id="outFlight" value="China Airlines CI 032（已確認）" readonly></div>
+<div class="field"><label>去程日期／起飛時間</label><input id="outDate" value="2026/10/30 · 台北起飛時間依電子機票" readonly></div>
+<div class="field"><label>抵達 Vancouver 時間</label><input id="arrival" value="約 20:00（使用畫面草稿；以電子機票為準）" readonly></div>
+<div class="field"><label>回程航班</label><input value="China Airlines CI 031" readonly></div>
+<div class="field"><label>回程起飛</label><input value="2026/11/08 01:00 · Vancouver (YVR)" readonly></div>
+<div class="field"><label>航空公司報到／行李提醒</label><textarea id="flightNotes" placeholder="報到櫃檯、行李規定、訂位代號等"></textarea></div>
+</div>
+<div class="info-card"><h3>⌂ 住宿資訊</h3>
+<div class="field"><label>前段住宿</label><input value="Burnaby 住宿（地址請在地圖頁本機輸入）" readonly></div>
+<div class="field"><label>住宿日期（最新規劃假設）</label><input value="2026/10/30 入住 · 2026/11/07 住宿" readonly></div>
+<div class="field"><label>是否延住至 11/04 退房</label><select id="extend"><option value="未確認">未確認</option><option value="已確認">已確認</option><option value="無法延住">無法延住</option></select></div>
+<div class="field"><label>後段 Vancouver 市區住宿名稱／地址</label><textarea id="cityStay" placeholder="尚未預訂，可先留白"></textarea></div>
+<div class="field"><label>入住／退房與訂房確認碼</label><textarea id="stayBooking" placeholder="待補"></textarea></div>
+</div>
+<div class="info-card"><h3>▣ 預約與確認代號</h3>
+<div class="field"><label>Victoria 渡輪去回程／訂位代號</label><textarea id="ferry" placeholder="待補；先確認去回程班次"></textarea></div>
+<div class="field"><label>Sea to Sky 一日遊／接駁</label><textarea id="gondola" placeholder="待補"></textarea></div>
+<div class="field"><label>Capilano 門票／入園時段</label><textarea id="capTicket" placeholder="待補"></textarea></div>
+<div class="field"><label>餐廳訂位／其他重要代號</label><textarea id="otherBooking" placeholder="餐廳、票券、預訂編號"></textarea></div>
+<button class="btn primary" id="saveInfo">儲存旅行資訊</button> <button class="btn" id="clearInfo">清除本機資料</button><div id="saveStatus" class="subtitle" style="margin-top:8px"></div>
+</div>
+<div class="info-card"><h3>購物路線補充</h3><p class="subtitle">Woolove Apparel（2015 Main St）已列為 11/3 市區選配，但不在 Robson／Gastown 主步行線上。Vessi Metrotown 與 Thomas Haas Broadway 店都需要額外繞行，這版先不安排。</p></div><div class="info-card"><h3>☁ 天氣預報說明</h3><p class="subtitle">旅行日期距離現在較遠時，可靠的逐日預報尚未發布。App 會嘗試讀取公開預報；若日期超出預報範圍，會明確顯示「尚無可靠預報」，不會用猜測的天氣填空。</p><a class="btn" href="https://weather.gc.ca/" target="_blank" rel="noopener">Environment Canada 天氣</a> <a class="btn" href="https://www.google.com/search?q=Vancouver+weather+forecast+October+30+2026" target="_blank" rel="noopener">搜尋 Vancouver 預報</a></div>
+</div>
+</section>
+<section class="panel" id="checklist">
+<div class="section-head"><div><h2>出發前清單</h2><p>勾選狀態會暫存在這個瀏覽器。</p></div></div>
+<div class="info-card" id="checks"></div>
+<div class="info-card" style="margin-top:12px"><h3>重要行程提醒</h3><div class="notice"><b>11/2 Victoria：</b>提前確認渡輪去回程及 BC Transit 接駁，避免只依賴臨時班次。</div><div class="notice"><b>住宿假設：</b>本版以 Burnaby 住宿 作為 10/30–11/7 每日出發點；請確認實際訂房涵蓋期間。</div><div class="notice"><b>11/7 晚上：</b>CI 031 在 11/8 凌晨 01:00 起飛，請當晚前往 YVR，不是 11/8 晚上。</div><div class="notice"><b>11/5 Sea to Sky：</b>官方目前公布 10/31–11/8 每日 09:00–17:00，最後下山纜車 18:00；11/9 起維修關閉。出發前請再確認。</div></div>
+</section>
+<section class="panel" id="budget">
+<div class="section-head"><div><h2>旅行記帳・分帳・公積金</h2><p>單一裝置本機保存；不會自動上傳或與其他手機同步。</p></div></div>
+<div class="notice">匯率會記錄在每筆交易的換算快照中，之後更新匯率不會改動舊帳。API 匯率僅供參考；實際信用卡／銀行匯率與手續費可能不同。請定期匯出備份。</div>
+<div class="budget-grid"><div class="budget-stat"><span>總支出（CAD 換算）</span><strong id="budgetTotal">CAD $0.00</strong></div><div class="budget-stat"><span>共同基金餘額</span><strong id="fundBalance">CAD $0.00</strong></div><div class="budget-stat"><span>已記帳筆數</span><strong id="expenseCount">0</strong></div><div class="budget-stat"><span>分帳待結算（淨額）</span><strong id="settlementCount">0</strong></div></div>
+<div class="budget-card"><h3>① 成員設定</h3><p class="muted-note">請填入 3–4 位同行者姓名。成員名稱會套用到付款、分帳和公積金記錄。</p><div class="member-inputs"><div><label for="member0">成員 1</label><input id="member0" value="我" maxlength="24"></div><div><label for="member1">成員 2</label><input id="member1" value="同行者 2" maxlength="24"></div><div><label for="member2">成員 3</label><input id="member2" value="同行者 3" maxlength="24"></div><div><label for="member3">成員 4（選填）</label><input id="member3" value="同行者 4" maxlength="24"></div></div><div class="budget-actions"><button class="btn primary" id="saveMembers">儲存成員</button></div></div>
+<div class="budget-card"><h3>② 幣別與匯率</h3><div class="budget-form"><div><label for="baseCurrency">主要幣別</label><select id="baseCurrency"><option value="CAD">CAD — 加拿大幣</option><option value="TWD">TWD — 新台幣</option><option value="USD">USD — 美元</option></select></div><div><label for="expenseCurrency">新增支出幣別</label><select id="expenseCurrency"><option>CAD</option><option>TWD</option><option>USD</option></select></div><div><label for="rateCAD">1 CAD = 多少 TWD</label><input id="rateCAD" type="number" min="0.000001" step="any" value="22.5"></div><div><label for="rateUSD">1 USD = 多少 CAD</label><input id="rateUSD" type="number" min="0.000001" step="any" value="1.38"></div><div class="full"><label for="rateTWD">1 TWD = 多少 CAD</label><input id="rateTWD" type="number" min="0.000001" step="any" value="0.0444"></div></div><div class="budget-actions"><button class="btn primary" id="saveRates">儲存手動匯率</button><button class="btn" id="fetchRates">取得 API 參考匯率</button></div><p id="rateStatus" class="muted-note">預設匯率僅為示例，請確認或自行輸入後使用。</p></div>
+<div class="budget-card"><h3>③ 新增支出</h3><form id="expenseForm"><div class="budget-form"><div><label for="expDate">日期</label><input id="expDate" type="date" value="2026-10-30" required></div><div><label for="expCategory">分類</label><select id="expCategory"><option>餐飲</option><option>交通</option><option>住宿</option><option>門票／活動</option><option>購物／伴手禮</option><option>保健品</option><option>其他</option></select></div><div class="full"><label for="expName">支出項目</label><input id="expName" placeholder="例如：晚餐、SkyTrain、LUZIA 門票" required maxlength="100"></div><div><label for="expAmount">金額</label><input id="expAmount" type="number" min="0.01" step="any" placeholder="0.00" required></div><div><label for="expCurrencyForm">幣別</label><select id="expCurrencyForm"><option>CAD</option><option>TWD</option><option>USD</option></select></div><div><label for="expPayer">付款人</label><select id="expPayer"></select></div><div><label for="expPayType">付款方式</label><select id="expPayType"><option value="personal">個人先付（分帳）</option><option value="fund">共同基金支付</option></select></div><div class="full"><label for="splitMode">分帳方式</label><select id="splitMode"><option value="equal">平均分帳</option><option value="selected">只分給勾選成員（平均）</option><option value="custom">自訂每人分攤金額</option></select></div><div class="full"><label>參與分帳成員</label><div id="splitMembers" class="member-inputs"></div><p class="muted-note">若選「自訂每人分攤金額」，每位成員金額總和必須等於支出總額。當付款方式選「共同基金支付」時，這裡的分攤方式只用來記錄每位成員實際受益／應負擔比例，不會再產生個人墊付結算。</p></div><div class="full"><label for="expNote">備註（選填）</label><input id="expNote" placeholder="收據、刷卡手續費等"></div></div><div class="budget-actions"><button class="btn primary" type="submit">新增支出</button><button class="btn" type="reset">清空表單</button></div></form></div>
+<div class="budget-card"><h3>④ 公積金收支</h3><p class="muted-note">存入是各成員的基金投入；支出若使用共同基金，請在新增支出選「共同基金支付」，避免重複扣款。</p><form id="fundForm"><div class="budget-form"><div><label for="fundDate">日期</label><input id="fundDate" type="date" value="2026-10-30" required></div><div><label for="fundType">類型</label><select id="fundType"><option value="contribution">存入／投入</option><option value="withdrawal">額外領出／調整</option></select></div><div><label for="fundMember">成員</label><select id="fundMember"></select></div><div><label for="fundAmount">金額</label><input id="fundAmount" type="number" min="0.01" step="any" required></div><div><label for="fundCurrency">幣別</label><select id="fundCurrency"><option>CAD</option><option>TWD</option><option>USD</option></select></div><div><label for="fundNote">備註</label><input id="fundNote" placeholder="現金公積金、退款等"></div></div><div class="budget-actions"><button class="btn primary" type="submit">記錄基金收支</button></div></form></div>
+<div class="budget-card"><h3>⑤ 旅程結束：手動分配剩餘公積金</h3><p class="muted-note">先確認基金餘額，再逐位輸入實際退款。每筆退款都會記入基金流水並扣減餘額；退款總額不得超過目前基金餘額。若不同幣別，會依當下匯率換算並保存快照。</p><form id="refundForm"><div class="budget-form"><div><label for="refundDate">退款日期</label><input id="refundDate" type="date" value="2026-11-07" required></div><div><label for="refundMember">退款給誰</label><select id="refundMember"></select></div><div><label for="refundAmount">退款金額</label><input id="refundAmount" type="number" min="0.01" step="any" required></div><div><label for="refundCurrency">退款幣別</label><select id="refundCurrency"><option>CAD</option><option>TWD</option><option>USD</option></select></div><div class="full"><label for="refundNote">備註（選填）</label><input id="refundNote" placeholder="例如：旅行結束退還剩餘公積金"></div></div><div class="budget-actions"><button class="btn primary" type="submit">記錄這筆退款</button></div><p class="muted-note">每位成員分別新增一筆即可手動指定退款金額；不會自動按投入比例或平均分配。</p></form></div>
+<div class="budget-card"><h3>⑥ 分帳結算建議</h3><p class="muted-note">依「個人先付」的支出與每人分攤計算；共同基金支出不會再次分帳。</p><div id="settlementList" class="budget-list"><p class="muted-note">尚無分帳資料。</p></div></div>
+<div class="budget-card"><h3>⑦ 每人基金與支出摘要</h3><div id="memberSummary" class="budget-list"></div></div>
+<div class="budget-card"><h3>⑧ 交易紀錄</h3><div class="budget-actions"><button class="btn" id="exportBudget">匯出 JSON 備份</button><label class="btn" for="importBudget" style="cursor:pointer">匯入備份</label><input id="importBudget" type="file" accept="application/json" hidden><button class="btn" id="clearBudget">清除記帳資料</button></div><div id="expenseList" class="budget-list" style="margin-top:12px"></div><h3 style="margin-top:18px">基金流水</h3><div id="fundList" class="budget-list"></div></div>
+</section>
+</main>
+<footer class="footer">Vancouver Notes · 旅遊資訊整理版。照片由 Wikimedia Commons 提供，詳見 ZIP 內 Photo Credits。營業時間與交通班次可能變動，請以官方最新公告為準。旅行資訊儲存在本機瀏覽器，不會上傳到伺服器。</footer>
+</div>
+<nav class="bottom-nav"><div class="bottom-inner"><button class="active" data-panel="itinerary"><span>▦</span>行程</button><button data-panel="map"><span>⌖</span>地圖</button><button data-panel="food"><span>♨</span>美食</button><button data-panel="info"><span>▤</span>資訊</button><button data-panel="checklist"><span>✓</span>清單</button><button data-panel="budget"><span>＄</span>記帳</button></div></nav>
+<script>
+const photos={
+  arrival:"assets/cover-arrival.webp",
+  farm:"assets/cover-farm.webp",
+  outlet:"assets/cover-outlet.webp",
+  victoria:"assets/cover-victoria.webp",
+  downtown:"assets/cover-downtown.webp",
+  granville:"assets/cover-granville.webp",
+  seatosky:"assets/cover-seatosky.webp",
+  capilano:"assets/cover-capilano.webp",
+  stanley:"assets/cover-stanley.webp",
+  return:"assets/cover-return.webp"
+};
+const days=[
+{date:"10/30",dow:"五",title:"抵達 Vancouver",theme:"ARRIVAL",intro:"CI 032 預定當地時間 19:00 抵達 YVR（請以電子機票為準）。建議先在機場吃 A&W，再搭大眾運輸前往 Burnaby 住宿；不建議落地當晚特地繞去 Chipotle。",weather:"Vancouver",photo:"arrival",places:[
+{type:"交通",name:"CI 032 抵達 YVR → Burnaby 住宿",address:"Vancouver International Airport → Burnaby, BC",desc:"CI 032 預定 10/30 19:00 抵達 Vancouver（當地時間；請以電子機票／航班通知為準）。入境領行李後，從 YVR-Airport Station 搭 Canada Line；Google Maps 會依當時班次安排轉乘 SkyTrain／最後一段步行或公車到住宿。常見路線會經 Downtown 轉乘，但以當日路線規劃器為準。請預留入境、行李與轉乘時間。注意：從 YVR 出發的部分 Canada Line 行程會加收 YVR Airport AddFare，現在官方公布為 CAD 6.50；付款方式與適用情況請看 TransLink。",map:"Burnaby, BC",routeFrom:"Vancouver International Airport",tags:["CI 032 已確認","大眾運輸"],link:"https://www.translink.ca/rider-guide/destinations/yvr-airport"},
+{type:"住宿",name:"Burnaby 住宿（每日固定出發點）",address:"Burnaby, BC",desc:"依最新規劃，每天都從此地址出發，假設住到 11/7。請確認實際訂房已涵蓋 10/30–11/7。",map:"Burnaby, BC",tags:["住宿基準","確認訂房日期"]},
+{type:"餐廳",name:"A&W Canada（落地晚餐優先）",address:"YVR Airport, 3211 Grant McConachie Way, Richmond, BC",routeFrom:"Vancouver International Airport",desc:"YVR 機場有 A&W 分店，商家資料目前列為 24 小時營業。若 CI 032 約 19:00 抵達，先在機場吃再出發比較順；實際營業與可進入區域以機場當日資訊為準。",map:"A&W Canada YVR Airport 3211 Grant McConachie Way Richmond",tags:["落地晚餐","目前列 24 小時"],link:"https://www.yvr.ca/en/passengers/navigate-yvr/terminal-maps"},
+{type:"餐廳",name:"Chipotle（可排 11/4 市區日）",address:"4700 Kingsway #2200, Burnaby, BC",desc:"Metrotown 一帶有 Chipotle，但從 YVR 抵達後先去住宿再繞去吃，會增加交通與時間壓力。建議留到 11/4 市區購物日或其他白天。",map:"Chipotle 4700 Kingsway Burnaby",tags:["改排其他日"],link:"https://www.google.com/maps/search/?api=1&query=Chipotle+4700+Kingsway+Burnaby"}
+]},
+{date:"10/31",dow:"六",title:"南瓜農場日",theme:"PUMPKIN PATCH",intro:"早上去 Southlands Heritage Farm 參加 Pumpkin Fest。活動適合預留 2–3 小時；下午可視體力去 Kerrisdale 喝咖啡，不再塞大型景點。",weather:"Vancouver Southlands",photo:"farm",places:[
+{type:"景點",name:"Southlands Heritage Farm · Pumpkin Fest",address:"3208 W 51st Ave, Vancouver, BC",desc:"南瓜、農場動物與季節活動。官方目前列出的活動日期為 9/26–10/31；週末 09:00–17:00，CAD 15 含一顆南瓜。2026 活動詳情請出發前再確認。",map:"Southlands Heritage Farm 3208 W 51st Ave Vancouver",tags:["必去","必買／南瓜","需確認活動"],link:"https://southlandsfarm.pike13.com/pages/home"},
+{type:"景點",name:"Kerrisdale 商店街（選配）",address:"Kerrisdale, Vancouver, BC",desc:"農場結束後找咖啡或小店，若交通不順就直接回住宿休息。",map:"Kerrisdale Vancouver BC",tags:["彈性安排"]}
+]},
+{date:"11/1",dow:"日",title:"Outlet 全天購物",theme:"SHOPPING DAY",intro:"今天整天留給 Outlet，不排其他景點。建議先列好想買的品牌與尺寸，分兩輪逛，中間安排午餐休息。",weather:"Richmond",photo:"outlet",places:[
+{type:"景點",name:"McArthurGlen Designer Outlet Vancouver Airport",address:"7899 Templeton Station Rd #1000, Richmond, BC",desc:"搭 Canada Line 到 Templeton 站，再依現場指標步行前往。先前查到的公開時間為每日 10:00–21:00；出發前確認。優先逛 Coach、Icebreaker、The North Face；Lululemon 建議留到 11/4 Robson Street 市區分店。",map:"McArthurGlen Designer Outlet 7899 Templeton Station Road Richmond",tags:["必買／服飾鞋款","全天安排"],link:"https://www.mcarthurglen.com/en/outlets/ca/designer-outlet-vancouver/"},
+{type:"交通",name:"Canada Line · Templeton Station",address:"Templeton Station, Richmond, BC",desc:"往返市區及機場方向的軌道交通。請確認當日班次與票價。",map:"Templeton Station Richmond BC",tags:["大眾運輸"]}
+]},
+{date:"11/2",dow:"一",title:"Victoria 經典一日遊",theme:"ISLAND DAY TRIP",intro:"這天會比較長。建議搭早班渡輪，先參觀 BC Parliament Buildings，再走 Inner Harbour 與市中心；回程渡輪要事先確認。",weather:"Victoria, BC",photo:"victoria",places:[
+{type:"交通",name:"Tsawwassen Ferry Terminal → Swartz Bay",address:"Tsawwassen, BC → Swartz Bay, BC",desc:"渡輪航程約 1 小時 35–45 分鐘，另需預留到碼頭與公車接駁時間。去回程班次與訂位尚待補充。",map:"Tsawwassen Ferry Terminal",tags:["重要預約","渡輪"],link:"https://www.bcferries.com/"},
+{type:"景點",name:"BC Parliament Buildings",address:"501 Belleville St, Victoria, BC",desc:"維多利亞地標建築，議會大廈及外部草坪適合拍照；是否能參加免費導覽請確認當日安排。",map:"BC Parliament Buildings 501 Belleville Street Victoria",tags:["必去","歷史故事"],link:"https://www.leg.bc.ca/"},
+{type:"景點",name:"Inner Harbour",address:"Victoria Inner Harbour, Victoria, BC",desc:"海港景觀與城市地標集中，可慢慢散步拍照。",map:"Victoria Inner Harbour",tags:["海港散步"]},
+{type:"景點",name:"Government Street／Victoria Downtown",address:"Government St, Victoria, BC",desc:"逛市中心商店、找咖啡與午餐；以回程渡輪時間為優先。",map:"Government Street Victoria BC",tags:["咖啡／小店"]}
+]},
+{date:"11/3",dow:"二",title:"Granville Island 美食散步",theme:"MARKET & BITES",intro:"若能在今天退房搬到市區，先確認新住宿可否寄放行李。市場小吃建議分享，不必每家都點完整份。",weather:"Granville Island",photo:"granville",places:[
+{type:"景點",name:"Granville Island Public Market",address:"1689 Johnston St, Vancouver, BC",desc:"市場適合邊走邊吃，並留時間逛海港。先前查到公開時間每日 09:00–18:00；各攤位時間可能不同。",map:"Granville Island Public Market 1689 Johnston Street Vancouver",tags:["必去","美食市場"],link:"https://granvilleisland.com/"},
+{type:"餐廳",name:"Lee’s Donuts",address:"Granville Island Public Market",desc:"甜甜圈適合當點心或早餐。",map:"Lee's Donuts Granville Island",tags:["必吃甜點","甜甜圈"]},
+{type:"餐廳",name:"The Lobster Man",address:"Granville Island, Vancouver, BC",desc:"你的海鮮清單之一；可留意龍蝦與龍蝦卷類選項，供應依當日為準。",map:"The Lobster Man Granville Island",tags:["海鮮","必吃選項"]},
+{type:"餐廳",name:"A La Mode Pie Café",address:"Granville Island, Vancouver, BC",desc:"可考慮 clam chowder 或鹹派，適合冷天吃熱食。",map:"A La Mode Pie Cafe Granville Island",tags:["必點／Clam Chowder"]},
+{type:"餐廳",name:"La Bise Canelés／JJ Bean",address:"Granville Island 或當日順路分店",desc:"La Bise 可當法式可麗露甜點；JJ Bean 作為咖啡休息點。",map:"La Bise Caneles Granville Island",tags:["伴手禮／可麗露","咖啡"]}
+]},
+{date:"11/4",dow:"三",title:"Robson 購物・Pender Street・Gastown・LUZIA",theme:"CITY & HERITAGE",intro:"市區購物與歷史街區日，晚上 19:00 看 Cirque du Soleil《LUZIA》。白天先逛 Robson Street 的 Aritzia／Lululemon，再依體力安排 Chinatown 的 Pender Street 與 Gastown Steam Clock；下午預留回住宿／市區用餐與前往 Concord Pacific Place 的交通時間。建議至少提前 30–45 分鐘抵達，並以票券上的入場時間為準。Woolove Apparel 可列為選配，但需額外轉乘；Vessi Metrotown 與 Thomas Haas Broadway 店不在主線上，先不硬塞。",weather:"Downtown Vancouver",photo:"downtown",places:[
+{type:"景點",name:"Aritzia · Robson Street",address:"1100 Robson St, Vancouver, BC",desc:"你指定必逛的購物點。建議先逛品牌，再把周邊店鋪當作自由時間。",map:"Aritzia 1100 Robson Street Vancouver",tags:["必買","購物"],link:"https://www.aritzia.com/"},
+{type:"餐廳",name:"Five Guys 或 Chipotle",address:"Robson Street 周邊分店",desc:"Five Guys 可考慮漢堡與薯條；Chipotle 可選 Burrito Bowl。依當天營業時間選擇。",map:"Five Guys Robson Street Vancouver",tags:["必吃選項","快速午餐"]},
+{type:"購物",name:"Woolove Apparel（市區選配）",address:"2015 Main St, Vancouver, BC",desc:"依你的要求列入市區選配；不在 Robson／Gastown 主步行線上，若當天不想額外轉乘可略過。",map:"Woolove Apparel 2015 Main Street Vancouver",tags:["選配","市區店"]},
+{type:"景點",name:"Pender Street／Chinatown",address:"Pender St, Vancouver, BC",desc:"Pender Street 位於 Vancouver Chinatown 歷史街區一帶。適合留意歷史建築、街區文化與中式店舖；建議白天走主要街道，避免為拍照繞進偏僻小巷。",map:"Pender Street Chinatown Vancouver",tags:["街區故事","白天前往"]},
+{type:"景點",name:"Gastown Steam Clock",address:"305 Water St, Vancouver, BC（附近路口）",desc:"蒸汽鐘與紅磚街景是經典拍照點。這區街景差異較大，建議走觀光主街、留意隨身物品。",map:"Gastown Steam Clock Vancouver",tags:["經典地標"]},
+{type:"餐廳",name:"La Belle Patate（可選晚餐）",address:"1215 Davie St, Vancouver, BC",desc:"魁北克風味 Poutine；如果今天已經吃過漢堡，可把它留作其他日子的替代選項。",map:"La Belle Patate 1215 Davie Street Vancouver",tags:["必點／Poutine"]}
+,
+{type:"表演／活動",name:"Cirque du Soleil《LUZIA》— 19:00 開演",address:"Concord Pacific Place, 88 Pacific Blvd, Vancouver, BC",desc:"演出期間：2026/11/4–12/13。你提供的售票日曆顯示 2026/11/4（三）19:00 開演，畫面票價 CAD $114 起（是否含稅費以結帳頁為準，票價與庫存可能變動）。地點為 Concord Pacific Place 的白色大帳篷（Under the Big Top），地址：88 Pacific Blvd, Vancouver, BC。演出約 125 分鐘，包含 25 分鐘中場休息，若 19:00 開演，預計約 21:05 結束（實際以主辦方安排為準）。建議提早 30–45 分鐘抵達，並預先確認電子票入場時間、座位區及散場後 SkyTrain／公車班次；當晚不要安排太緊的後續行程。",map:"Concord Pacific Place 88 Pacific Boulevard Vancouver",tags:["已排入行程","19:00 開演","票價 CAD $114 起","重要預約"],link:"https://www.cirquedusoleil.com/luzia"}
+]},
+{date:"11/5",dow:"四",title:"Sea to Sky Gondola 山海一日遊",theme:"MOUNTAIN & FOREST",intro:"以 Sea to Sky Gondola 取代 Banff／Lake Louise。大眾運輸銜接較不方便，建議預訂從 Vancouver 出發的一日團或接駁。",weather:"Squamish, BC",photo:"seatosky",places:[
+{type:"交通",name:"Vancouver → Squamish 一日團／接駁",address:"出發集合點依團方通知",desc:"目前尚未預訂。請確認接駁點、往返時間、是否包含 Shannon Falls。",map:"Vancouver BC",tags:["重要預約","待預訂"]},
+{type:"景點",name:"Sea to Sky Gondola",address:"36800 Highway 99, Squamish, BC",desc:"搭纜車上山，欣賞 Howe Sound 海灣與山林。官方目前列出 10/31–11/8 每日 09:00–17:00，最後下山纜車 18:00；11/9 起維修關閉。天氣會影響能見度。",map:"Sea to Sky Gondola 36800 Highway 99 Squamish",tags:["必去","山景","確認營運"],link:"https://www.seatoskygondola.com/hours-and-prices/"},
+{type:"景點",name:"Shannon Falls（視團路線）",address:"Squamish, BC",desc:"瀑布可作為加碼停留，但只有在接駁或一日團包含時才加入，避免交通接不上。",map:"Shannon Falls Provincial Park Squamish",tags:["選配","自然景觀"]}
+]},
+{date:"11/6",dow:"五",title:"Capilano 吊橋・Cliffwalk",theme:"RAINFOREST WALK",intro:"上午安排雨林吊橋與懸崖步道，預留約 2–3 小時。回市區後如果想吃 Joe Fortes 的 Happy Hour，需控制離園與交通時間。",weather:"North Vancouver",photo:"capilano",places:[
+{type:"景點",name:"Capilano Suspension Bridge Park",address:"3735 Capilano Rd, North Vancouver, BC",desc:"園區包含 Suspension Bridge、Cliffwalk 與 Treetops Adventure。官方目前列出 11/2–11/19 為 10:00–17:00；入園時段與票價需確認。",map:"Capilano Suspension Bridge Park 3735 Capilano Road",tags:["必去","吊橋","懸崖步道"],link:"https://www.capbridge.com/tickets-and-hours/"},
+{type:"餐廳",name:"Joe Fortes Seafood & Chop House",address:"777 Thurlow St, Vancouver, BC",desc:"你想吃的海鮮與生蠔 Happy Hour 選項。先前查到 Happy Hour 15:00–17:00，但當日菜單、價格與生蠔供應需確認。",map:"Joe Fortes Seafood Chop House 777 Thurlow Street Vancouver",tags:["必吃海鮮","生蠔 Happy Hour"],link:"https://www.joefortes.ca/"},
+{type:"餐廳",name:"La Belle Patate（替代）",address:"1215 Davie St, Vancouver, BC",desc:"如果不想吃正式海鮮晚餐，可改吃 Poutine；不需要兩家都排。",map:"La Belle Patate 1215 Davie Street Vancouver",tags:["必點／Poutine"]}
+]},
+{date:"11/7",dow:"六",title:"Stanley Park・海港・Sylvia Hotel",theme:"COASTAL FINALE",intro:"最後一個完整觀光日刻意留鬆。上午選 Stanley Park 的圖騰柱、Seawall 或 Lions Gate Bridge 觀景點；下午走 Coal Harbour／Canada Place 或 English Bay。晚上回住宿取行李後前往 YVR。",weather:"Vancouver",photo:"stanley",places:[
+{type:"景點",name:"Stanley Park · Seawall／Totem Poles",address:"Vancouver, BC V6G 1Z4",desc:"Vancouver 最大的城市公園之一，結合海堤、雨林步道、海灘與原住民圖騰柱。公園官方列出一般開放時間 06:00–22:00；園區很大，不建議徒步走完全部。",map:"Stanley Park Totem Poles Vancouver",tags:["必去","公園故事"],link:"https://vancouver.ca/parks-recreation-culture/stanley-park.aspx"},
+{type:"景點",name:"Coal Harbour／Canada Place",address:"Downtown Vancouver, BC",desc:"海港、遊艇與城市山景；兩處可視時間選擇，不必每個點都走到。",map:"Coal Harbour Vancouver",tags:["海港景色"]},
+{type:"景點",name:"Sylvia Hotel",address:"1154 Gilford St, Vancouver, BC",desc:"1913 年開幕的歷史飯店，以常春藤外牆與 English Bay 海岸位置聞名。可在此用餐或喝飲料，但營業與訂位資訊需先確認。",map:"Sylvia Hotel 1154 Gilford Street Vancouver",tags:["歷史建築","海景休息"],link:"https://www.sylviahotel.com/"},
+{type:"景點",name:"English Bay Beach（與 Sylvia Hotel 同區）",address:"English Bay Beach, Vancouver, BC",desc:"海邊散步作為最後一站。11 月日落較早，請預留回住宿拿行李與前往機場時間。",map:"English Bay Beach Vancouver",tags:["海岸散步"]},
+{type:"交通",name:"前往 YVR · CI 031",address:"Vancouver International Airport",desc:"CI 031 於 2026/11/8 凌晨 01:00 起飛，因此請在 11/7 晚上前往機場。確認當晚 Canada Line 班次與航空公司報到截止時間。",map:"Vancouver International Airport",tags:["重要航班","不要延誤"]}
+]},
+{date:"11/8",dow:"日",title:"凌晨返程",theme:"FLIGHT HOME",intro:"不再安排景點。請以航空公司規定為準，提早到 YVR 完成報到與安檢。",weather:"YVR Airport",photo:"return",places:[
+{type:"交通",name:"Vancouver International Airport（YVR）",address:"Vancouver International Airport, Richmond, BC",desc:"回程航班：China Airlines CI 031，11/8 01:00 起飛。報到櫃檯與行李資訊待補。",map:"Vancouver International Airport",tags:["CI 031","航班提醒"]}
+]}
+];
+const allPlaces=days.flatMap(d=>d.places.map(p=>({...p,day:d.date,dayTitle:d.title})));
+const foods=[
+{name:"Five Guys",category:"漢堡",must:"必點",items:"Cheeseburger／Little Cheeseburger、薯條",day:"11/4 Robson Street（晚上 LUZIA）",map:"Five Guys Robson Street Vancouver",note:"Robson 購物日順路；分店營業時間出發前確認。"},
+{name:"Chipotle",category:"墨西哥碗餐",must:"必點",items:"Burrito Bowl，可自行搭配肉類、米飯、豆類與配料",day:"11/4 Robson Street（晚上 LUZIA）",map:"Chipotle 398 Robson Street Vancouver",note:"想吃清爽、份量可控時的選項。"},
+{name:"La Belle Patate",category:"加拿大在地料理",must:"必點",items:"Poutine（薯條、起司凝乳、肉汁）",day:"11/3 或 11/6 替代晚餐",map:"La Belle Patate 1215 Davie Street Vancouver",note:"Davie Street，適合當一餐，不必另外為它排一整段行程。"},
+{name:"A&W Canada",category:"加拿大速食",must:"可選",items:"Teen Burger、洋蔥圈、Root Beer",day:"10/30 抵達晚餐／11/7 備選",map:"A&W Canada Vancouver BC",note:"依住宿或市區路線找順路分店。"},
+{name:"Triple O’s",category:"BC 在地漢堡",must:"可選",items:"招牌漢堡、薯條或奶昔",day:"11/7 English Bay 附近備選",map:"Triple O's Cornwall Avenue Vancouver",note:"只在路線順路時安排，不必特地繞行。"},
+{name:"The Fish Man",category:"中式海鮮",must:"可選",items:"依當日海鮮與烤串菜單選擇",day:"備選：Richmond 晚餐",map:"The Fish Man 8391 Alexandra Road Richmond",note:"位於 Richmond，不在市中心步行路線上；要去再另外安排。"},
+{name:"Marcello Ristorante & Pizzeria",category:"義大利料理",must:"可選",items:"披薩或義大利麵",day:"備選：Commercial Drive",map:"Marcello Ristorante 1404 Commercial Drive Vancouver",note:"當作市區替代晚餐，確認當日營業時間。"},
+{name:"OEB Breakfast Co.",category:"早餐",must:"必點方向",items:"早餐菜單中的 Poutine 選項（請以當日菜單為準）",day:"備選：Yaletown 早餐",map:"OEB Breakfast Co 1137 Marinaside Crescent Vancouver",note:"若想吃早餐 Poutine，可另排市區早午餐。"},
+{name:"Lee’s Donuts",category:"甜點",must:"必吃",items:"當日甜甜圈口味",day:"11/3 Granville Island",map:"Lee's Donuts Granville Island",note:"適合分享，避免每家都吃完整份。"},
+{name:"A La Mode Pie Café",category:"熱食／派",must:"必點",items:"Clam Chowder 或鹹派",day:"11/3 Granville Island",map:"A La Mode Pie Cafe Granville Island",note:"天冷時的熱食選項。"},
+{name:"The Lobster Man",category:"海鮮",must:"必吃方向",items:"龍蝦／龍蝦卷類（視當日供應）",day:"11/3 Granville Island",map:"The Lobster Man Granville Island",note:"留意供應與價格，建議分食。"},
+{name:"Earnest Ice Cream",category:"冰淇淋",must:"必點口味方向",items:"Cream Cheese、Whisky Hazelnut、London Fog（依當日口味表）",day:"11/4 市區購物日或順路分店",map:"Earnest Ice Cream Vancouver",note:"特色口味可能輪替，不能保證當天三款都有。"},
+{name:"La Bise Canelés",category:"伴手禮／甜點",must:"伴手禮",items:"法式可麗露",day:"11/3 Granville Island",map:"La Bise Caneles Granville Island",note:"適合當甜點或小份伴手禮；保存方式與供應依店家為準。"},
+{name:"JJ Bean",category:"咖啡",must:"休息點",items:"咖啡與小點",day:"Granville Island／市區順路分店",map:"JJ Bean Vancouver",note:"挑當天路線附近的分店，不必專程跨區。"}
+];
+const dayStrip=document.getElementById("dayStrip"),daysEl=document.getElementById("days");
+function mapUrl(q,mode="transit",origin="Burnaby, BC"){return "https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(q)+(origin?"&origin="+encodeURIComponent(origin):"")+"&travelmode=transit"}
+function tagHtml(t){let c="info";if(/必去|必吃|必點|生蠔|海鮮|必買/.test(t))c="must";else if(/伴手禮|南瓜|服飾鞋款/.test(t))c="buy";else if(/故事|歷史/.test(t))c="story";else if(/預約|待預訂|CI 031|航班|確認/.test(t))c="book";else if(/Poutine|Clam Chowder|甜點/.test(t))c="food";return `<span class="tag ${c}">${t}</span>`}
+function weatherBox(loc,date){const coords={"Vancouver":[49.2827,-123.1207],"Vancouver Southlands":[49.2208,-123.1743],"Richmond":[49.1666,-123.1336],"Victoria, BC":[48.4284,-123.3656],"Downtown Vancouver":[49.2827,-123.1207],"Granville Island":[49.2712,-123.1340],"Squamish, BC":[49.7016,-123.1558],"North Vancouver":[49.3429,-123.1149],"YVR Airport":[49.1967,-123.1815]};const c=coords[loc]||coords["Vancouver"];return `<div class="weather" data-weather-location="${loc}" data-weather-date="${date}" data-lat="${c[0]}" data-lon="${c[1]}"><div class="weather-icon">☁</div><div><strong>${loc} 天氣</strong><small class="wx-detail">尚未取得該日期的可靠預報。</small></div><div class="weather-status">待更新</div></div>`}
+function placeCard(p){const tags=(p.tags||[]).map(tagHtml).join("");return `<article class="place"><div class="place-head"><h4>${p.name}</h4><span class="tag info">${p.type}</span></div><div class="address">${p.address}</div>${tags?`<div class="tags">${tags}</div>`:""}<p>${p.desc}</p><div class="actions"><a class="btn primary" href="${mapUrl(p.map,"transit",p.routeFrom||"Burnaby, BC")}" target="_blank" rel="noopener">↗ 大眾運輸導航</a>${p.link?`<a class="btn" href="${p.link}" target="_blank" rel="noopener">官方資訊</a>`:""}</div></article>`}
+days.forEach((d,i)=>{
+ document.getElementById("summaryList").insertAdjacentHTML("beforeend",`<button type="button" class="summary-item" data-summary-day="${i}"><span class="summary-date">${d.date}</span><span><strong>${d.title}</strong><small>${d.intro}</small></span></button>`);
+ dayStrip.insertAdjacentHTML("beforeend",`<button class="day-chip ${i===0?"active":""}" data-day="${i}"><small>${d.dow}曜日</small><strong>${d.date}</strong></button>`);
+ const groups=["景點","表演／活動","餐廳","交通","住宿"];let groupHtml="";
+ groups.forEach(g=>{let ps=d.places.filter(p=>p.type===g);if(ps.length)groupHtml+=`<div class="category-title">${g==="景點"?"◌ 景點與體驗":g==="表演／活動"?"★ 表演與活動":g==="餐廳"?"⌁ 餐廳與咖啡":g==="交通"?"↗ 交通與導航":"⌂ 住宿"} </div>${ps.map(placeCard).join("")}`});
+ daysEl.insertAdjacentHTML("beforeend",`<article class="day-card" id="day-${i}"><div class="day-cover"><img src="${photos[d.photo]||photos.city}" alt="${d.title}實景照片" loading="lazy"><span class="cover-label">${d.theme}</span></div><div class="day-content"><div class="day-top"><h3>${d.title}</h3><span class="day-date">${d.date} · 2026</span></div><p class="day-intro">${d.intro}</p>${weatherBox(d.weather,d.date)}${groupHtml}<div class="actions"><a class="btn dark daily-route-link" data-route-date="${d.date}" data-route-destination="${encodeURIComponent(d.places[0].map)}" href="https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(i===0?"Vancouver International Airport":"Burnaby, BC")}&destination=${encodeURIComponent(d.places[0].map)}&travelmode=transit" target="_blank" rel="noopener">${i===0?"從 YVR 規劃今日交通":"從住宿規劃今日交通"} ↗</a></div></div></article>`);
+});
+dayStrip.addEventListener("click",e=>{let b=e.target.closest("[data-day]");if(!b)return;document.querySelectorAll(".day-chip").forEach(x=>x.classList.toggle("active",x===b));document.getElementById("day-"+b.dataset.day).scrollIntoView({behavior:"smooth",block:"start"})});
+document.getElementById("summaryList").addEventListener("click",e=>{
+ const b=e.target.closest("[data-summary-day]");if(!b)return;
+ document.querySelectorAll(".day-chip").forEach(x=>x.classList.toggle("active",x.dataset.day===b.dataset.summaryDay));
+ document.getElementById("day-"+b.dataset.summaryDay).scrollIntoView({behavior:"smooth",block:"start"});
+});
+
+
+// Local-only route planner. Custom address is not written into the public HTML.
+const routeDates = days.map(d=>({label:`2026/${d.date}`,key:d.date}));
+const routeStart=document.getElementById("routeStart"), routeEnd=document.getElementById("routeEnd");
+routeDates.forEach(d=>{routeStart.add(new Option(d.label,d.key));routeEnd.add(new Option(d.label,d.key));});
+routeStart.value="10/30"; routeEnd.value="11/8";
+const routeAddress=document.getElementById("routeAddress");
+const routeRemember=document.getElementById("routeRemember");
+const routeStatus=document.getElementById("routeStatus");
+let activeRouteAddress="";
+function updateRouteLinks(){
+ const startIndex=routeDates.findIndex(x=>x.key===routeStart.value);
+ const endIndex=routeDates.findIndex(x=>x.key===routeEnd.value);
+ document.querySelectorAll(".daily-route-link").forEach(a=>{
+   const dateIndex=routeDates.findIndex(x=>x.key===a.dataset.routeDate);
+   const isArrival=a.dataset.routeDate==="10/30";
+   const inRange=dateIndex>=startIndex && dateIndex<=endIndex;
+   const origin=isArrival?"Vancouver International Airport":(inRange&&activeRouteAddress?activeRouteAddress:"Burnaby, BC");
+   const destination=isArrival?(activeRouteAddress||"Burnaby, BC"):decodeURIComponent(a.dataset.routeDestination);
+   a.href="https://www.google.com/maps/dir/?api=1&origin="+encodeURIComponent(origin)+"&destination="+encodeURIComponent(destination)+"&travelmode=transit";
+   a.textContent=(isArrival?"從 YVR":(inRange&&activeRouteAddress?"從自訂住宿":"從 Burnaby"))+" 規劃今日交通 ↗";
+ });
+ document.querySelectorAll("#mapList a.btn").forEach(a=>{
+   const url=new URL(a.href);
+   url.searchParams.set("origin",activeRouteAddress||"Burnaby, BC");
+   url.searchParams.set("travelmode","transit");a.href=url.toString();
+ });
+}
+document.getElementById("applyRoutePlan").addEventListener("click",()=>{
+ const address=routeAddress.value.trim();
+ if(!address){routeStatus.textContent="請先輸入出發地址。";return;}
+ if(routeDates.findIndex(x=>x.key===routeStart.value)>routeDates.findIndex(x=>x.key===routeEnd.value)){
+   routeStatus.textContent="開始日期不能晚於結束日期。";return;
+ }
+ activeRouteAddress=address;updateRouteLinks();
+ if(routeRemember.checked){
+   try{localStorage.setItem("vancouverRouteAddress",address);localStorage.setItem("vancouverRouteStart",routeStart.value);localStorage.setItem("vancouverRouteEnd",routeEnd.value);}
+   catch(e){routeStatus.textContent="本次已套用地址，但瀏覽器不允許本機儲存。";return;}
+ }else{
+   try{localStorage.removeItem("vancouverRouteAddress");localStorage.removeItem("vancouverRouteStart");localStorage.removeItem("vancouverRouteEnd");}catch(e){}
+ }
+ const count=routeDates.filter((x,i)=>i>=routeDates.findIndex(y=>y.key===routeStart.value)&&i<=routeDates.findIndex(y=>y.key===routeEnd.value)).length;
+ routeStatus.textContent=`已套用：${routeStart.value}–${routeEnd.value}，共 ${count} 天使用此出發地址。10/30 抵達日仍從 YVR 出發。按每日「規劃今日交通」會開啟 Google Maps 大眾運輸路線。`;
+});
+document.getElementById("clearRoutePlan").addEventListener("click",()=>{
+ routeAddress.value="";activeRouteAddress="";routeRemember.checked=false;
+ try{localStorage.removeItem("vancouverRouteAddress");localStorage.removeItem("vancouverRouteStart");localStorage.removeItem("vancouverRouteEnd");}catch(e){}
+ updateRouteLinks();routeStatus.textContent="已清除地址；頁面不會保存你的完整住宿地址。";
+});
+try{
+ const saved=localStorage.getItem("vancouverRouteAddress");
+ if(saved){routeAddress.value=saved;routeRemember.checked=true;activeRouteAddress=saved;routeStart.value=localStorage.getItem("vancouverRouteStart")||"10/30";routeEnd.value=localStorage.getItem("vancouverRouteEnd")||"11/8";updateRouteLinks();routeStatus.textContent="已載入這台裝置上次記住的地址。";}
+}catch(e){}
+
+document.querySelectorAll("[data-panel]").forEach(btn=>btn.addEventListener("click",()=>{const id=btn.dataset.panel;document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll("[data-panel]").forEach(b=>b.classList.toggle("active",b.dataset.panel===id));window.scrollTo({top:0,behavior:"smooth"})}));
+document.getElementById("mapList").innerHTML=allPlaces.map(p=>`<div class="map-row"><div><b>${p.name}</b><small>${p.day} · ${p.address}</small></div><a class="btn primary" href="${mapUrl(p.map,"transit",p.routeFrom||"Burnaby, BC")}" target="_blank" rel="noopener">大眾運輸導航 ↗</a></div>`).join("");
+
+const mapPoints=[
+{n:"Burnaby 住宿（地址由使用者輸入）",q:"Burnaby, BC",lat:49.2189,lon:-122.9964},
+{n:"YVR 機場／CI 032 抵達",q:"Vancouver International Airport",lat:49.1967,lon:-123.1815},
+{n:"A&W Canada（機場）",q:"A&W Canada YVR Airport",lat:49.1948,lon:-123.1789},
+{n:"Southlands Heritage Farm",q:"Southlands Heritage Farm Vancouver",lat:49.2208,lon:-123.1743},
+{n:"McArthurGlen Outlet",q:"McArthurGlen Designer Outlet Vancouver Airport",lat:49.1949,lon:-123.1465},
+{n:"BC Parliament Buildings",q:"BC Parliament Buildings Victoria",lat:48.4195,lon:-123.3701},
+{n:"Aritzia／Robson Street",q:"Aritzia 1100 Robson Street Vancouver",lat:49.2856,lon:-123.1254},
+{n:"Pender Street／Chinatown",q:"Pender Street Chinatown Vancouver",lat:49.2807,lon:-123.1021},
+{n:"Granville Island Public Market",q:"Granville Island Public Market Vancouver",lat:49.2712,lon:-123.1340},
+{n:"Sea to Sky Gondola",q:"Sea to Sky Gondola Squamish",lat:49.6733,lon:-123.1558},
+{n:"Capilano Suspension Bridge",q:"Capilano Suspension Bridge Park",lat:49.3429,lon:-123.1149},
+{n:"Stanley Park",q:"Stanley Park Vancouver",lat:49.3043,lon:-123.1443},
+{n:"Sylvia Hotel／English Bay",q:"Sylvia Hotel Vancouver",lat:49.2859,lon:-123.1418}
+];
+function initLeafletMap(){
+ if(!window.L){setTimeout(initLeafletMap,300);return}
+ const el=document.getElementById("leafletMap"); if(!el)return;
+ const m=L.map(el).setView([49.28,-123.12],10);
+ // Two public basemaps: CARTO first, with OpenStreetMap available as a manual fallback.
+ const carto=L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",{
+   maxZoom:20,
+   attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank">CARTO</a>'
+ });
+ const osm=L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{
+   maxZoom:19,
+   attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
+ });
+ carto.addTo(m);
+ L.control.layers({"簡潔地圖（預設）":carto,"OpenStreetMap":osm},null,{position:"topright"}).addTo(m);
+ const bounds=[];
+ mapPoints.forEach(p=>{const marker=L.marker([p.lat,p.lon]).addTo(m);bounds.push([p.lat,p.lon]);marker.bindPopup(`<b>${p.n}</b><br><small>${p.q}</small><br><a href="${mapUrl(p.q,"transit","Burnaby, BC")}" target="_blank">從 Burnaby 住宿規劃大眾運輸 ↗</a>`);});
+ m.fitBounds(bounds,{padding:[18,18]});
+ document.querySelector('[data-panel="map"]').addEventListener("click",()=>setTimeout(()=>m.invalidateSize(),100));
+}
+initLeafletMap();
+
+document.getElementById("foodList").innerHTML=foods.map(f=>`<article class="food-card"><div class="place-head"><h3>${f.name}</h3>${tagHtml(f.must)}</div><p>${f.category} · ${f.day}</p><div class="tags">${tagHtml("必點菜單")}</div><p><b>${f.items}</b></p><p>${f.note}</p><a class="btn" href="${mapUrl(f.map)}" target="_blank" rel="noopener">Google Maps ↗</a></article>`).join("");
+
+const souvenirs=[
+{name:'Nestlé Coffee Crisp',image:'assets/coffee-crisp.png',day:'超市／伴手禮採買',items:'加拿大常見巧克力威化棒',map:'Nestlé Coffee Crisp Canada',note:'加拿大常見巧克力威化棒；實際口味、包裝與庫存依門市為準。'},
+{name:'President’s Choice Loads of Ketchup Chips',image:'assets/presidents-choice-ketchup-chips.png',day:'超市／伴手禮採買',items:'番茄醬口味波浪洋芋片',map:'President’s Choice Loads of Ketchup Chips Canada',note:'番茄醬口味波浪洋芋片；實際口味、包裝與庫存依門市為準。'},
+{name:'President’s Choice Loads of All Dressed Chips',image:'assets/presidents-choice-all-dressed-chips.png',day:'超市／伴手禮採買',items:'All Dressed 綜合調味洋芋片',map:'President’s Choice Loads of All Dressed Chips Canada',note:'All Dressed 綜合調味洋芋片；實際口味、包裝與庫存依門市為準。'},
+{name:'Reese’s Dipped Animal Crackers 680 g',image:'assets/reeses-animal-crackers.png',day:'超市／伴手禮採買',items:'花生醬糖果與牛奶巧克力脆餅',map:'Reese’s Dipped Animal Crackers 680 g Canada',note:'花生醬糖果與牛奶巧克力脆餅；實際口味、包裝與庫存依門市為準。'},
+{name:'Miss Vickie’s Chips',image:'assets/miss-vickies-chips.png',day:'超市／伴手禮採買',items:'加拿大常見洋芋片品牌；口味可挑圖中款式',map:'Miss Vickie’s Chips Canada',note:'加拿大常見洋芋片品牌；口味可挑圖中款式；實際口味、包裝與庫存依門市為準。'},
+{name:'Nestlé Turtles Classic 350 g',image:'assets/nestle-turtles.png',day:'超市／伴手禮採買',items:'焦糖胡桃巧克力',map:'Nestlé Turtles Classic 350 g Canada',note:'焦糖胡桃巧克力；實際口味、包裝與庫存依門市為準。'},
+{name:'Nonni’s Bakery Limoncello Bites 794 g',image:'assets/nonnis-limoncello-bites.png',day:'超市／伴手禮採買',items:'檸檬風味脆餅',map:'Nonni’s Bakery Limoncello Bites 794 g Canada',note:'檸檬風味脆餅；實際口味、包裝與庫存依門市為準。'},
+{name:'Brookside Dark Chocolate',image:'assets/brookside-dark-chocolate.png',day:'超市／伴手禮採買',items:'黑巧克力外層、莓果風味內餡',map:'Brookside Dark Chocolate Canada',note:'黑巧克力外層、莓果風味內餡；實際口味、包裝與庫存依門市為準。'},
+
+{name:"Natural Factors RxOmega-3 Ultra Strength / Maximum Triple Strength",day:"藥局／保健品採買",items:"高濃度 Omega-3 魚油；Ultra Strength 與 Maximum Triple Strength 請依實際貨架版本擇一",map:"Natural Factors RxOmega-3 Ultra Strength Maximum Triple Strength Canada",note:"依你提供的截圖加入。截圖建議選擇高純度規格；不同版本的 EPA/DHA 含量與每日份量可能不同，購買時以瓶身標示為準。若服用抗凝血藥、對魚類過敏或近期要手術，先詢問藥師。"},
+{name:"Jamieson Probiotic 10 Billion",image:"assets/jamieson-probiotic-10-billion.png",day:"藥局／保健品採買",items:"益生菌；截圖顯示 10 Billion（100 億）活菌，另有含 B12、C、D、鋅等複方版本",map:"Jamieson Probiotic 10 Billion Canada",note:"依你提供的截圖加入。Jamieson 有不同菌株數與添加維生素的版本，請核對正面標籤及菌株資訊，不要只依 100 億活菌數比較。"},
+{name:"Webber Naturals Cranberry 36:1 Concentrate",image:"assets/webber-naturals-cranberry-36-1.png",day:"藥局／保健品採買",items:"蔓越莓濃縮膠囊；截圖提及 36:1 濃縮及 250 mg／500 mg 等不同規格",map:"Webber Naturals Cranberry 36:1 Concentrate Canada",note:"依你提供的截圖加入。不同瓶裝的每顆含量、顆數及濃縮規格可能不同，購買時核對標籤。若有泌尿道症狀，保健品不能取代醫療評估；服用 warfarin 等抗凝血藥者先問藥師。"},
+{name:"Webber Naturals Lutein 25 mg／護眼複方",day:"藥局／保健品採買",items:"葉黃素；可比較 Lutein 25 mg 或含藍莓／Bilberry 的護眼複方",map:"Webber Naturals Lutein 25 mg Bilberry Canada",note:"依你提供的截圖描述加入；截圖未顯示可確認的完整商品型號，請在店內確認品牌、葉黃素含量及是否另含玉米黃素或藍莓成分。"},
+{name:"Webber Naturals Triple Strength Omega-3 900 mg",image:"assets/omega-3-webber-naturals.webp",day:"藥局／保健品採買",items:"Omega-3 魚油；圖片標示 900 mg EPA/DHA，實際含量請核對瓶身標籤",map:"Webber Naturals Triple Strength Omega-3 900 mg Canada",note:"依你提供的圖片加入採買清單。這是保健品，不代表可治療或穩定情緒；若服用抗凝血藥、對魚類過敏或有手術安排，先向藥師確認。"},
+{name:"Natural Factors Stress-Relax Pharma GABA",image:"assets/pharma-gaba-natural-factors.webp",day:"藥局／保健品採買",items:"Pharma GABA；你提供的照片標示每 2 顆 200 mg，請確認實際產品版本",map:"Natural Factors Stress-Relax Pharma GABA Canada",note:"依圖片加入清單；不同版本可能有不同劑型與劑量。不要直接依網路描述當作急性焦慮或失眠的救援藥，購買及使用前請詢問藥師。"},
+{name:"Webber Naturals Magnesium Bisglycinate 200 mg",image:"assets/magnesium-bisglycinate-webber-naturals.webp",day:"藥局／保健品採買",items:"Magnesium Bisglycinate；照片顯示 200 mg，請核對標示是元素鎂或化合物含量",map:"Webber Naturals Magnesium Bisglycinate 200 mg Canada",note:"依你提供的圖片加入採買清單。不同產品每份顆數與元素鎂含量可能不同；腎臟疾病或正在服用其他藥物時，先詢問藥師。"},
+{name:"CanPrev L-Theanine with Magnesium",image:"assets/l-theanine-canprev.webp",day:"藥局／保健品採買",items:"圖片實際顯示 L-Theanine with Magnesium（含鎂複方），並非純單方 L-Theanine",map:"CanPrev L-Theanine with Magnesium Canada",note:"依你提供的實際產品照片加入清單。注意這瓶含鎂，與純單方茶胺酸不同；請依標籤確認成分及劑量，使用前可向藥師確認是否適合你。"},
+{name:"楓糖茶（圖片參考）",image:"assets/maple-tea.png",day:"伴手禮採買",items:"The Original Maple Tea · 25 tea bags",map:"maple tea Canada souvenir",note:"依你提供的商品照片加入清單；購買時確認包裝、成分與實際規格。"},
+{name:"DARE Ultimate Maple Crème Cookies 300g",image:"assets/dare-maple-cookies.png",day:"伴手禮採買",items:"楓糖奶油夾心餅乾 · 300 g",map:"Dare Ultimate Maple Creme Cookies 300g",note:"依你提供的商品照片加入清單；留意行李空間與入境食品規定。"},
+{name:"Southlands 農場南瓜／季節商品",day:"10/31 · Southlands Heritage Farm",items:"活動現場南瓜與季節性農場商品（依 2026 活動安排）",map:"Southlands Heritage Farm Vancouver",note:"先確認活動是否舉辦及購票規則。"},
+{name:"Granville Island 市場食品",day:"11/4 · Granville Island Public Market",items:"包裝零食、咖啡、甜點或當地食品",map:"Granville Island Public Market Vancouver",note:"挑選包裝完整、保存期限清楚的商品；入境規定需確認。"},
+{name:"McArthurGlen Outlet 採買",day:"11/1 · Richmond",items:"服飾、鞋款、運動品牌商品",map:"McArthurGlen Designer Outlet Vancouver Airport",note:"建議先列品牌、尺寸與預算。"}
+];
+const uniqueSouvenirs=souvenirs.filter((s,i,a)=>{
+ const normName=s.name.trim().toLowerCase().replace(/[^a-z0-9]+/g,"");
+ const normImage=(s.image||"").split("/").pop().trim().toLowerCase();
+ return a.findIndex(x=>{
+   const xName=x.name.trim().toLowerCase().replace(/[^a-z0-9]+/g,"");
+   const xImage=(x.image||"").split("/").pop().trim().toLowerCase();
+   return xName===normName || (normImage && xImage===normImage);
+ })===i;
+});
+document.getElementById("souvenirList").innerHTML=uniqueSouvenirs.map(s=>`<article class="food-card">${s.image?`<img src="${s.image}" alt="${s.name}" loading="lazy" style="width:100%;max-height:240px;object-fit:contain;background:#fff;border-radius:12px;margin-bottom:10px">`:""}<div class="place-head"><h3>${s.name}</h3>${tagHtml("伴手禮／採買")}</div><p>${s.day}</p><p><b>${s.items}</b></p><p>${s.note}</p><a class="btn primary" href="${mapUrl(s.map)}" target="_blank" rel="noopener">Google Maps ↗</a></article>`).join("");
+
+const checklist=["確認 CI 032 去程航班時間與報到資訊","確認 Burnaby 住宿是否已訂到 11/7","預訂／確認 Victoria 渡輪去回程","確認 Sea to Sky 一日團或接駁","確認 Capilano 入園票與時段","確認 Joe Fortes Happy Hour 與生蠔供應","確認 Vancouver 市區住宿與行李寄放","查看天氣、雨具與山區步道狀況","確認 11/7 晚上前往 YVR 的交通","確認 CI 031 報到截止時間與行李規定"];
+document.getElementById("checks").innerHTML=checklist.map((c,i)=>`<label class="checkrow"><input type="checkbox" data-check="${i}"><span>${c}</span></label>`).join("");
+async function refreshWeather(){
+ const status=document.getElementById("weatherRefresh");status.textContent="更新中…";
+ const cards=[...document.querySelectorAll("[data-weather-location]")];
+ const groups=new Map();
+ cards.forEach(el=>{const key=`${el.dataset.lat},${el.dataset.lon}`;if(!groups.has(key))groups.set(key,[]);groups.get(key).push(el)});
+ const codeIcon=code=>code===0?"☀":code<=3?"⛅":code<=67?"🌧":code<=77?"❄":"🌦";
+ await Promise.all([...groups.entries()].map(async ([key,els])=>{
+  const [lat,lon]=key.split(",");
+  try{
+   const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=America%2FVancouver&forecast_days=16`;
+   const res=await fetch(url);if(!res.ok)throw new Error("weather unavailable");
+   const data=await res.json();
+   els.forEach(el=>{
+    const raw=el.dataset.weatherDate.split("/");
+    const target=`2026-${raw[0].padStart(2,"0")}-${raw[1].padStart(2,"0")}`;
+    const idx=data.daily.time.indexOf(target);
+    if(idx<0){el.querySelector(".wx-detail").textContent="目前超出公開預報範圍；請在出發前 1–3 天更新。";el.querySelector(".weather-status").textContent="尚無預報";return}
+    const max=data.daily.temperature_2m_max[idx],min=data.daily.temperature_2m_min[idx],rain=data.daily.precipitation_probability_max[idx],code=data.daily.weather_code[idx];
+    el.querySelector(".weather-icon").textContent=codeIcon(code);
+    el.querySelector(".wx-detail").textContent=`預報高低溫 ${Math.round(max)}° / ${Math.round(min)}°C · 降雨機率 ${rain??"—"}%`;
+    el.querySelector(".weather-status").textContent="Open-Meteo";
+   });
+  }catch(e){els.forEach(el=>{el.querySelector(".wx-detail").textContent="目前無法連線取得預報；請稍後再試。";el.querySelector(".weather-status").textContent="待查"})}
+ }));
+ status.textContent="↻ 更新天氣";
+}document.getElementById("weatherRefresh").addEventListener("click",refreshWeather);
+const fields=["outFlight","outDate","arrival","flightNotes","extend","cityStay","stayBooking","ferry","gondola","capTicket","otherBooking"];
+function loadSaved(){try{const v=JSON.parse(localStorage.getItem("vancouverNotesInfo")||"{}");fields.forEach(id=>{if(v[id]!==undefined)document.getElementById(id).value=v[id]});const checks=JSON.parse(localStorage.getItem("vancouverNotesChecks")||"{}");document.querySelectorAll("[data-check]").forEach(c=>c.checked=!!checks[c.dataset.check])}catch(e){}}
+document.getElementById("saveInfo").addEventListener("click",()=>{const v={};fields.forEach(id=>v[id]=document.getElementById(id).value);try{localStorage.setItem("vancouverNotesInfo",JSON.stringify(v));document.getElementById("saveStatus").textContent="已儲存在這個瀏覽器。";}catch(e){document.getElementById("saveStatus").textContent="瀏覽器不允許儲存，請另行記錄。"}});
+document.getElementById("clearInfo").addEventListener("click",()=>{if(confirm("確定清除本機儲存的旅行資訊？")){localStorage.removeItem("vancouverNotesInfo");fields.forEach(id=>{const el=document.getElementById(id);if(!el.readOnly)el.value=""});document.getElementById("saveStatus").textContent="已清除。"}});
+document.getElementById("checks").addEventListener("change",()=>{const v={};document.querySelectorAll("[data-check]").forEach(c=>v[c.dataset.check]=c.checked);try{localStorage.setItem("vancouverNotesChecks",JSON.stringify(v))}catch(e){}});
+
+// Local-only travel expense / split / common fund module
+const BUDGET_KEY='vancouverNotesBudgetV1';
+let budgetData={members:['我','同行者 2','同行者 3','同行者 4'],base:'CAD',rates:{CAD:1,TWD:0.0444,USD:1/1.38},expenses:[],fund:[],schemaVersion:2};
+function loadBudget(){try{const d=JSON.parse(localStorage.getItem(BUDGET_KEY)||'null');if(d&&Array.isArray(d.members))budgetData={...budgetData,...d,schemaVersion:2,fund:Array.isArray(d.fund)?d.fund:[],expenses:Array.isArray(d.expenses)?d.expenses:[]};}catch(e){} }
+function saveBudget(){try{localStorage.setItem(BUDGET_KEY,JSON.stringify(budgetData));}catch(e){alert('無法儲存：瀏覽器儲存空間可能已滿，請先匯出備份。')}renderBudget();}
+function money(n,c=budgetData.base){return `${c} ${Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`}
+function toCAD(amount,currency){const rates=budgetData.rates; if(currency==='CAD')return amount; if(currency==='TWD')return amount*(Number(rates.TWD)||0); if(currency==='USD')return amount*(Number(rates.USD)||0);return amount;}
+function fromCAD(cad,currency){if(currency==='CAD')return cad;if(currency==='TWD')return cad/(Number(budgetData.rates.TWD)||1);if(currency==='USD')return cad/(Number(budgetData.rates.USD)||1);return cad;}
+function baseValue(cad){return budgetData.base==='CAD'?cad:budgetData.base==='TWD'?cad/(Number(budgetData.rates.TWD)||1):cad/(Number(budgetData.rates.USD)||1)}
+function escapeHTML(x){return String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function activeMembers(){return budgetData.members.map((name,i)=>({name:(name||'').trim(),i})).filter(x=>x.name);}
+function fillPeople(){const people=activeMembers();['expPayer','fundMember','refundMember'].forEach(id=>{const el=document.getElementById(id),old=el.value;el.innerHTML=people.map(p=>`<option value="${p.i}">${escapeHTML(p.name)}</option>`).join('');if([...el.options].some(o=>o.value===old))el.value=old;});document.getElementById('splitMembers').innerHTML=people.map(p=>`<div class="check-row"><input type="checkbox" class="split-person" id="split_${p.i}" value="${p.i}" checked><label for="split_${p.i}">${escapeHTML(p.name)}</label></div>`).join('');}
+function saveMemberNames(){const names=[0,1,2,3].map(i=>document.getElementById('member'+i).value.trim());if(names.slice(0,3).some(n=>!n)){alert('至少需要 3 位成員姓名。');return;}if(new Set(names.filter(Boolean)).size!==names.filter(Boolean).length){alert('成員名稱請勿重複。');return;}budgetData.members=names;fillPeople();saveBudget();}
+function renderBudget(){const ex=budgetData.expenses||[],fund=budgetData.fund||[];const total=ex.reduce((a,e)=>a+Number(e.baseCAD||0),0);const fb=fund.reduce((a,f)=>a+(f.type==='contribution'?1:-1)*Number(f.baseCAD||0),0)-ex.filter(e=>e.payType==='fund').reduce((a,e)=>a+Number(e.baseCAD||0),0);document.getElementById('budgetTotal').textContent=money(baseValue(total));document.getElementById('fundBalance').textContent=money(baseValue(fb));document.getElementById('expenseCount').textContent=ex.length;const balances=settlementBalances();document.getElementById('settlementCount').textContent=balances.filter(x=>Math.abs(x.balance)>.005).length;
+const expenseList=document.getElementById('expenseList');expenseList.innerHTML=ex.length?ex.slice().reverse().map(e=>`<div class="budget-row"><div><strong>${escapeHTML(e.name)}</strong><small>${escapeHTML(e.date)} · ${escapeHTML(e.category)} · ${escapeHTML(budgetData.members[e.payer]||'未知成員')}</small><small>${escapeHTML(e.payType==='fund'?'共同基金支付':'個人先付')} · 分攤 ${e.shares.length} 人 · 匯率快照</small><small>${escapeHTML(e.note||'')}</small></div><div style="text-align:right;white-space:nowrap"><strong>${escapeHTML(e.currency)} ${Number(e.amount).toFixed(2)}</strong><small>≈ ${money(baseValue(e.baseCAD))}</small><button data-delete-exp="${e.id}">刪除</button></div></div>`).join(''):'<p class="muted-note">尚未新增支出。</p>';
+const fundList=document.getElementById('fundList');fundList.innerHTML=fund.length?fund.slice().reverse().map(f=>`<div class="budget-row"><div><strong>${f.type==='contribution'?'基金存入':f.type==='refund'?'公積金退款':'基金領出／調整'} · ${escapeHTML(budgetData.members[f.member]||'未知成員')}</strong><small>${escapeHTML(f.date)} · ${escapeHTML(f.note||'')}</small></div><div style="text-align:right;white-space:nowrap"><strong>${escapeHTML(f.currency)} ${Number(f.amount).toFixed(2)}</strong><small>≈ ${money(baseValue(f.baseCAD))}</small><button data-delete-fund="${f.id}">刪除</button></div></div>`).join(''):'<p class="muted-note">尚無基金流水。</p>';
+const sl=document.getElementById('settlementList');const debt=settlementTransfers();sl.innerHTML=debt.length?debt.map(t=>`<div class="budget-row"><div><strong>${escapeHTML(budgetData.members[t.from])} → ${escapeHTML(budgetData.members[t.to])}</strong><small>建議結算轉帳</small></div><strong>${money(baseValue(t.amount))}</strong></div>`).join(''):'<p class="muted-note">目前沒有待結算金額，或尚未建立個人先付支出。</p>';
+const ms=document.getElementById('memberSummary');ms.innerHTML=activeMembers().map(p=>{const paid=ex.filter(e=>e.payType==='personal'&&e.payer===p.i).reduce((a,e)=>a+e.baseCAD,0),share=ex.filter(e=>e.payType==='personal').reduce((a,e)=>a+(e.shares.find(x=>x.member===p.i)?.baseCAD||0),0),contrib=fund.filter(f=>f.member===p.i).reduce((a,f)=>a+(f.type==='contribution'?1:-1)*f.baseCAD,0);return `<div class="budget-row"><div><strong>${escapeHTML(p.name)}</strong><small>個人墊付 ${money(baseValue(paid))} · 應分攤 ${money(baseValue(share))}</small><small>基金淨投入 ${money(baseValue(contrib))}</small></div><strong>${money(baseValue(paid-share))}</strong></div>`}).join('');
+}
+function settlementBalances(){const b=activeMembers().map(p=>({member:p.i,balance:0}));for(const e of budgetData.expenses||[]){if(e.payType!=='personal')continue;const payer=b.find(x=>x.member===e.payer);if(payer)payer.balance+=e.baseCAD;for(const sh of e.shares){const x=b.find(y=>y.member===sh.member);if(x)x.balance-=sh.baseCAD;}}return b;}
+function settlementTransfers(){let credits=settlementBalances().filter(x=>x.balance>0.005).map(x=>({...x,amount:x.balance})),debts=settlementBalances().filter(x=>x.balance<-.005).map(x=>({...x,amount:-x.balance})),out=[];for(const d of debts){for(const c of credits){if(d.amount<.005)break;const a=Math.min(d.amount,c.amount);if(a>.005)out.push({from:d.member,to:c.member,amount:a});d.amount-=a;c.amount-=a;}}return out;}
+function refreshCurrencySelects(){const base=document.getElementById('baseCurrency').value;budgetData.base=base;document.querySelectorAll('#expenseCurrency,#expCurrencyForm,#fundCurrency').forEach(el=>{if(![...el.options].some(o=>o.value==='CAD'))return;});renderBudget();}
+document.getElementById('saveMembers').addEventListener('click',saveMemberNames);
+document.getElementById('baseCurrency').addEventListener('change',e=>{budgetData.base=e.target.value;saveBudget();});
+document.getElementById('saveRates').addEventListener('click',()=>{const cadTwd=Number(document.getElementById('rateCAD').value),usdCad=Number(document.getElementById('rateUSD').value),twdCad=1/cadTwd;if(!(cadTwd>0&&usdCad>0&&twdCad>0)){alert('請輸入大於 0 的匯率。');return;}budgetData.rates={CAD:1,TWD:twdCad,USD:usdCad};document.getElementById('rateStatus').textContent='已儲存手動匯率。1 CAD ≈ '+cadTwd.toFixed(4)+' TWD；1 USD ≈ '+usdCad.toFixed(4)+' CAD。';saveBudget();});
+document.getElementById('fetchRates').addEventListener('click',async()=>{const status=document.getElementById('rateStatus');status.textContent='正在取得 API 參考匯率…';try{const r=await fetch('https://api.frankfurter.dev/v1/latest?base=CAD&symbols=TWD,USD');if(!r.ok)throw Error('API unavailable');const d=await r.json();if(!d.rates?.TWD||!d.rates?.USD)throw Error('缺少匯率');budgetData.rates={CAD:1,TWD:1/d.rates.TWD,USD:1/d.rates.USD};document.getElementById('rateCAD').value=d.rates.TWD;document.getElementById('rateUSD').value=1/d.rates.USD;document.getElementById('rateTWD').value=1/d.rates.TWD;status.textContent=`API 參考匯率已載入（日期 ${d.date}）。按「儲存手動匯率」即可保存；若 API 無法提供 TWD，請手動輸入。`;renderBudget();}catch(e){status.textContent='無法取得 API 匯率，請確認網路或手動輸入。舊匯率不會被更動。';}});
+document.getElementById('splitMode').addEventListener('change',e=>{document.getElementById('splitMembers').querySelectorAll('.split-person').forEach(c=>{c.checked=e.target.value==='equal'||e.target.value==='custom'||c.checked;});});
+document.getElementById('expenseForm').addEventListener('submit',e=>{e.preventDefault();const amount=Number(document.getElementById('expAmount').value),currency=document.getElementById('expCurrencyForm').value,mode=document.getElementById('splitMode').value,payer=Number(document.getElementById('expPayer').value),chosen=mode==='equal'?activeMembers().map(x=>x.i):[...document.querySelectorAll('.split-person:checked')].map(x=>Number(x.value));if(!(amount>0)){alert('請輸入有效金額。');return;}if(!chosen.length){alert('至少選擇一位分攤成員。');return;}let shareAmounts=[];if(mode==='custom'){shareAmounts=chosen.map(i=>({member:i,amount:Number(document.getElementById('custom_'+i)?.value||0)}));if(Math.abs(shareAmounts.reduce((a,x)=>a+x.amount,0)-amount)>.011){alert('自訂分攤金額總和必須等於支出總額。');return;}}else{const each=amount/chosen.length;shareAmounts=chosen.map((i,n)=>({member:i,amount:n===chosen.length-1?amount-each*(chosen.length-1):each}));}const cad=toCAD(amount,currency);const shares=shareAmounts.map(x=>({member:x.member,amount:x.amount,baseCAD:cad*x.amount/amount}));const exp={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),date:document.getElementById('expDate').value,name:document.getElementById('expName').value.trim(),category:document.getElementById('expCategory').value,amount,currency,payer,payType:document.getElementById('expPayType').value,mode,shares,baseCAD:cad,note:document.getElementById('expNote').value.trim(),rateSnapshot:{...budgetData.rates},createdAt:new Date().toISOString()};budgetData.expenses.push(exp);saveBudget();e.target.reset();document.getElementById('expDate').value='2026-10-30';fillPeople();});
+document.getElementById('fundForm').addEventListener('submit',e=>{e.preventDefault();const amount=Number(document.getElementById('fundAmount').value),currency=document.getElementById('fundCurrency').value;if(!(amount>0)){alert('請輸入有效金額。');return;}budgetData.fund.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),date:document.getElementById('fundDate').value,type:document.getElementById('fundType').value,member:Number(document.getElementById('fundMember').value),amount,currency,baseCAD:toCAD(amount,currency),note:document.getElementById('fundNote').value.trim(),rateSnapshot:{...budgetData.rates}});saveBudget();e.target.reset();document.getElementById('fundDate').value='2026-10-30';});
+document.getElementById('refundForm').addEventListener('submit',e=>{e.preventDefault();const amount=Number(document.getElementById('refundAmount').value),currency=document.getElementById('refundCurrency').value,member=Number(document.getElementById('refundMember').value),cad=toCAD(amount,currency);const balance=(budgetData.fund||[]).reduce((a,f)=>a+(f.type==='contribution'?1:-1)*Number(f.baseCAD||0),0)-(budgetData.expenses||[]).filter(x=>x.payType==='fund').reduce((a,x)=>a+Number(x.baseCAD||0),0);if(!(amount>0)){alert('請輸入大於 0 的退款金額。');return;}if(cad>balance+0.005){alert('退款金額超過目前公積金餘額。請先確認基金餘額或調整退款金額。');return;}budgetData.fund.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),date:document.getElementById('refundDate').value,type:'refund',member,amount,currency,baseCAD:cad,note:document.getElementById('refundNote').value.trim()||'手動分配剩餘公積金退款',rateSnapshot:{...budgetData.rates},createdAt:new Date().toISOString()});saveBudget();e.target.reset();document.getElementById('refundDate').value='2026-11-07';});
+document.getElementById('expenseList').addEventListener('click',e=>{const b=e.target.closest('[data-delete-exp]');if(b&&confirm('刪除這筆支出？')){budgetData.expenses=budgetData.expenses.filter(x=>x.id!==b.dataset.deleteExp);saveBudget();}});document.getElementById('fundList').addEventListener('click',e=>{const b=e.target.closest('[data-delete-fund]');if(b&&confirm('刪除這筆基金流水？')){budgetData.fund=budgetData.fund.filter(x=>x.id!==b.dataset.deleteFund);saveBudget();}});
+document.getElementById('exportBudget').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(budgetData,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='vancouver-budget-backup.json';a.click();URL.revokeObjectURL(url);});
+document.getElementById('importBudget').addEventListener('change',async e=>{const f=e.target.files?.[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!Array.isArray(d.members)||!Array.isArray(d.expenses)||!Array.isArray(d.fund))throw Error();budgetData=d;[0,1,2,3].forEach(i=>document.getElementById('member'+i).value=budgetData.members[i]||'');document.getElementById('baseCurrency').value=budgetData.base||'CAD';fillPeople();saveBudget();alert('備份匯入成功。');}catch(err){alert('檔案格式不正確，未匯入。');}e.target.value='';});
+document.getElementById('clearBudget').addEventListener('click',()=>{if(confirm('確定清除所有記帳、分帳和公積金資料？建議先匯出備份。')){budgetData.expenses=[];budgetData.fund=[];saveBudget();}});
+function initBudget(){loadBudget();[0,1,2,3].forEach(i=>document.getElementById('member'+i).value=budgetData.members[i]||'');document.getElementById('baseCurrency').value=budgetData.base||'CAD';document.getElementById('rateTWD').value=budgetData.rates.TWD||0.0444;document.getElementById('rateUSD').value=budgetData.rates.USD?1/budgetData.rates.USD:1.38;document.getElementById('rateCAD').value=budgetData.rates.TWD?1/budgetData.rates.TWD:22.5;fillPeople();renderBudget();}
+initBudget();
+
+function renderCustomSplitInputs(){const host=document.getElementById('splitMembers');host.querySelectorAll('.custom-share').forEach(x=>x.remove());if(document.getElementById('splitMode').value!=='custom')return;host.querySelectorAll('.split-person').forEach(c=>{const label=host.querySelector('label[for="'+c.id+'"]');const wrap=document.createElement('div');wrap.className='custom-share';wrap.innerHTML='<label for="custom_'+c.value+'">'+escapeHTML(budgetData.members[Number(c.value)]||'成員')+' 分攤金額</label><input id="custom_'+c.value+'" type="number" min="0" step="any" value="0">';label?.parentElement?.appendChild(wrap);});}
+document.getElementById('splitMode').addEventListener('change',renderCustomSplitInputs);
+document.getElementById('splitMembers').addEventListener('change',renderCustomSplitInputs);
+
+loadSaved();refreshWeather();
+</script>
+</body></html>
